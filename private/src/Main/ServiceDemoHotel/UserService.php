@@ -20,6 +20,7 @@ use Main\Helper\UserHelper;
 use Valitron\Validator;
 
 class UserService extends BaseService {
+
     protected $fields = ["type", "display_name", "username", "email", "password", "gender", "birth_date", "picture", "mobile", "website", "fb_id", "fb_name"];
 
     public function getCollection(){

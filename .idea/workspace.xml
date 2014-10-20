@@ -1,53 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cb5e8844-b1c1-40d7-895e-7ed14fb8e400" name="Default" comment="init project">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/private/src/Main/Service/BaseServer.php" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/.name" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/AdminCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/AdminCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/AppCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/AppCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/BaseCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/BaseCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/CheckInCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/CheckInCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/ContactCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/ContactCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/ContactCommentCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/ContactCommentCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/CountryCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/CountryCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/LimoCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/LimoCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/MeCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/MeCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/OAuthCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/OAuthCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/OverviewCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/OverviewCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/OverviewPromotionCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/OverviewPromotionCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/PlaceCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/PlaceCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/PromotionCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/PromotionCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/RegisterCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/RegisterCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/ReservationCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/ReservationCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/ReservationServiceCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/ReservationServiceCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/RoomTypeCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/RoomTypeCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/ServiceCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/ServiceCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/TagCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/TagCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/UserCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/UserCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/CTL/UserSettingCTL.php" afterPath="$PROJECT_DIR$/private/src/Main/CTLDemoHotel/UserSettingCTL.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/AdminService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/AdminService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/ApplicationService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/ApplicationService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/BaseService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/BaseService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/CheckInService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/CheckInService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/ContactCommentService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/ContactCommentService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/ContactService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/ContactService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/FeedService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/FeedService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/LimoService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/LimoService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/OAuthService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/OAuthService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/OrderService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/OrderService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/OverviewPromotionService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/OverviewPromotionService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/OverviewService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/OverviewService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/PlaceService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/PlaceService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/PromotionService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/PromotionService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/ReservationService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/ReservationService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/ReservationServiceService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/ReservationServiceService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/RoomTypeService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/RoomTypeService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/ServiceService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/ServiceService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/TagService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/TagService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/UserService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/UserService.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/private/src/Main/Service/UserSettingService.php" afterPath="$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/UserSettingService.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+    <list default="true" id="cb5e8844-b1c1-40d7-895e-7ed14fb8e400" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/private/src/Main/CTL/BaseCTL.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/private/src/Main/Service/BaseService.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/private/src/Main/CTL/FeedCTL.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/private/src/Main/Service/FeedService.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/private/src/Main/CTL/MeCTL.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/private/src/Main/CTL/OAuthCTL.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/private/src/Main/Service/OAuthService.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/private/src/Main/CTL/RegisterCTL.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/private/src/Main/Service/ServiceService.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/private/src/Main/Service/TimeService.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/private/src/Main/CTL/UserCTL.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/private/src/Main/Service/UserService.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/private/src/Main/CTL/UserSettingCTL.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/private/src/Main/Service/UserSettingService.php" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/private/src/Main/Service/BaseServer.php" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/private/src/Main/DB.php" afterPath="$PROJECT_DIR$/private/src/Main/DB.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="thaweeyont.iws" />
@@ -71,10 +41,39 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="BaseServer.php" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/private/src/Main/Service/BaseServer.php">
+      <file leaf-file-name="FeedCTL.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/private/src/Main/CTL/FeedCTL.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="5" selection-start="307" selection-end="307" vertical-scroll-proportion="0.34433284" vertical-offset="0" max-vertical-offset="697">
+            <state line="23" column="16" selection-start="339" selection-end="339" vertical-scroll-proportion="-9.375" vertical-offset="15" max-vertical-offset="2040">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FeedService.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/private/src/Main/Service/FeedService.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="33" column="43" selection-start="715" selection-end="715" vertical-scroll-proportion="3.75" vertical-offset="510" max-vertical-offset="3420">
+              <folding>
+                <element signature="e#112#137#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BaseCTL.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/BaseCTL.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="22" column="0" selection-start="373" selection-end="373" vertical-scroll-proportion="-10.0" vertical-offset="0" max-vertical-offset="525">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DB.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/private/src/Main/DB.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="23" column="35" selection-start="546" selection-end="546" vertical-scroll-proportion="0.38737446" vertical-offset="0" max-vertical-offset="697">
               <folding />
             </state>
           </provider>
@@ -94,9 +93,21 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/info.php" />
-        <option value="$PROJECT_DIR$/private/src/Main/DB.php" />
-        <option value="$PROJECT_DIR$/private/src/Main/Service/UserService.php" />
         <option value="$PROJECT_DIR$/private/src/Main/Service/BaseServer.php" />
+        <option value="$PROJECT_DIR$/private/src/Main/CTL/RegisterCTL.php" />
+        <option value="$PROJECT_DIR$/private/src/Main/CTL/OAuthCTL.php" />
+        <option value="$PROJECT_DIR$/private/src/Main/Service/UserService.php" />
+        <option value="$PROJECT_DIR$/private/src/Main/Service/UserSettingService.php" />
+        <option value="$PROJECT_DIR$/private/src/Main/CTL/UserCTL.php" />
+        <option value="$PROJECT_DIR$/private/src/Main/CTL/UserSettingCTL.php" />
+        <option value="$PROJECT_DIR$/private/src/Main/Service/ServiceService.php" />
+        <option value="$PROJECT_DIR$/private/src/Main/Service/OAuthService.php" />
+        <option value="$PROJECT_DIR$/private/src/Main/CTL/MeCTL.php" />
+        <option value="$PROJECT_DIR$/private/src/Main/CTL/FeedCTL.php" />
+        <option value="$PROJECT_DIR$/private/src/Main/CTL/BaseCTL.php" />
+        <option value="$PROJECT_DIR$/private/src/Main/Service/BaseService.php" />
+        <option value="$PROJECT_DIR$/private/src/Main/Service/FeedService.php" />
+        <option value="$PROJECT_DIR$/private/src/Main/DB.php" />
       </list>
     </option>
   </component>
@@ -132,6 +143,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -208,32 +220,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="ServiceDemoHotel" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="thaweeyont" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="thaweeyont" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="private" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="Service" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -260,7 +246,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Language" />
+              <option name="myItemId" value="CTLDemoHotel" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -286,7 +272,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Http" />
+              <option name="myItemId" value="CTL" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -312,7 +298,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Helper" />
+              <option name="myItemId" value="Context" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -332,7 +318,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -394,7 +379,11 @@
       <created>1413432268686</created>
       <updated>1413432268687</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="clone CTL AND Service">
+      <created>1413606957946</created>
+      <updated>1413606957946</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -402,24 +391,24 @@
     <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32977304" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32977304" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -435,88 +424,16 @@
       <TodoPanelSettings />
     </option>
     <MESSAGE value="init project" />
-    <option name="LAST_COMMIT_MESSAGE" value="init project" />
+    <MESSAGE value="clone CTL AND Service" />
+    <option name="LAST_COMMIT_MESSAGE" value="clone CTL AND Service" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/OAuthService.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="61" column="47" selection-start="2004" selection-end="2004" vertical-scroll-proportion="0.0" vertical-offset="915" max-vertical-offset="2115">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/OAuthService.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="61" column="47" selection-start="2004" selection-end="2004" vertical-scroll-proportion="0.0" vertical-offset="915" max-vertical-offset="2115">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/private/src/Main/DB.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="5" selection-start="663" selection-end="663" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="525">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/AdminCTL.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1665" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/AppCTL.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="825" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/BaseCTL.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="615" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/private/src/Main/Context/Context.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1410">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/ContactCTL.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="0" selection-start="501" selection-end="501" vertical-scroll-proportion="0.0" vertical-offset="405" max-vertical-offset="900" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/OAuthCTL.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="1" selection-start="776" selection-end="776" vertical-scroll-proportion="0.0" vertical-offset="570" max-vertical-offset="975" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.htaccess">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="721" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/private/src/Main/DataModel/AppModel.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="721" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/private/src/Main/DataModel/BaseCollection.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1245" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/AdminService.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1755" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/MeCTL.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="721" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/LimoCTL.php">
@@ -536,31 +453,14 @@
         <state line="7" column="10" selection-start="99" selection-end="99" vertical-scroll-proportion="0.15064563" vertical-offset="0" max-vertical-offset="697" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/private/src/Main/DB.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="28" column="5" selection-start="663" selection-end="663" vertical-scroll-proportion="0.0" vertical-offset="420" max-vertical-offset="525">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/AdminCTL.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1665" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/BaseCTL.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="721" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/ContactCTL.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="27" column="0" selection-start="501" selection-end="501" vertical-scroll-proportion="0.0" vertical-offset="405" max-vertical-offset="900" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/OAuthCTL.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="3" selection-start="216" selection-end="216" vertical-scroll-proportion="-8.708333" vertical-offset="1" max-vertical-offset="1050" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/PromotionCTL.php">
@@ -573,13 +473,6 @@
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2280" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/private/src/Main/Context/Context.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.85078907" vertical-offset="593" max-vertical-offset="1290">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/private/src/Main/Helper/ArrayHelper.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="32" column="27" selection-start="680" selection-end="680" vertical-scroll-proportion="0.4964132" vertical-offset="59" max-vertical-offset="780" />
@@ -590,38 +483,14 @@
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="825" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/BaseService.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="27" column="27" selection-start="0" selection-end="698" vertical-scroll-proportion="0.47345766" vertical-offset="0" max-vertical-offset="697" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/RegisterCTL.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="12" selection-start="353" selection-end="353" vertical-scroll-proportion="0.34433284" vertical-offset="0" max-vertical-offset="697" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/UserService.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="55" selection-start="1876" selection-end="1876" vertical-scroll-proportion="0.9868421" vertical-offset="0" max-vertical-offset="2580" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/private/src/Main/App.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="697" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/OAuthService.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="61" column="47" selection-start="2004" selection-end="2004" vertical-scroll-proportion="-28.125" vertical-offset="0" max-vertical-offset="2115">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/private/src/Main/Language/Language.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="721">
-          <folding />
-        </state>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="721" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/private/src/Main/Http/RequestInfo.php">
@@ -652,9 +521,264 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/private/src/Main/Service/BaseServer.php">
+    <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/TagCTL.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="5" selection-start="307" selection-end="307" vertical-scroll-proportion="0.34433284" vertical-offset="0" max-vertical-offset="697">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="721">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/OAuthCTL.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="9" selection-start="0" selection-end="1317" vertical-scroll-proportion="-6.875" vertical-offset="120" max-vertical-offset="975">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/OAuthService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="0" selection-start="0" selection-end="6302" vertical-scroll-proportion="0.19444445" vertical-offset="2" max-vertical-offset="2190">
+          <folding>
+            <element signature="e#6#83#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/OverviewCTL.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="38" column="5" selection-start="815" selection-end="815" vertical-scroll-proportion="-19.375" vertical-offset="0" max-vertical-offset="930">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/RegisterCTL.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="0" selection-start="211" selection-end="862" vertical-scroll-proportion="0.15064563" vertical-offset="0" max-vertical-offset="697">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/ReservationService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1395">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/Service/UserSettingService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="91" column="1" selection-start="2442" selection-end="2442" vertical-scroll-proportion="0.9569584" vertical-offset="698" max-vertical-offset="1455">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/UserSettingService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="23" selection-start="0" selection-end="2442" vertical-scroll-proportion="0.06456241" vertical-offset="0" max-vertical-offset="1305">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/UserService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="48" column="18" selection-start="0" selection-end="5951" vertical-scroll-proportion="0.5263158" vertical-offset="165" max-vertical-offset="2580">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/UserCTL.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="29" column="13" selection-start="0" selection-end="2058" vertical-scroll-proportion="0.47345766" vertical-offset="0" max-vertical-offset="1170">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/UserSettingCTL.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="41" selection-start="0" selection-end="951" vertical-scroll-proportion="0.40889525" vertical-offset="0" max-vertical-offset="697">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/ServiceService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="20" selection-start="0" selection-end="10425" vertical-scroll-proportion="0.36585367" vertical-offset="0" max-vertical-offset="4515">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/Service/ServiceService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="60" selection-start="632" selection-end="632" vertical-scroll-proportion="0.47345766" vertical-offset="90" max-vertical-offset="4710">
+          <folding>
+            <element signature="e#6#84#0" expanded="true" />
+            <element signature="e#112#137#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/CTL/UserCTL.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="79" column="1" selection-start="2058" selection-end="2058" vertical-scroll-proportion="0.8708752" vertical-offset="473" max-vertical-offset="1170">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/CTL/UserSettingCTL.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="26" selection-start="345" selection-end="345" vertical-scroll-proportion="0.3758967" vertical-offset="83" max-vertical-offset="780">
+          <folding>
+            <element signature="e#6#83#0" expanded="true" />
+            <element signature="e#107#151#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/CTL/RegisterCTL.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="0" selection-start="291" selection-end="291" vertical-scroll-proportion="0.41246292" vertical-offset="7" max-vertical-offset="705">
+          <folding>
+            <element signature="e#6#89#0" expanded="true" />
+            <element signature="e#112#156#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/ServiceCTL.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.66765577" vertical-offset="450" max-vertical-offset="2745">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/CTL/MeCTL.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="0" selection-start="209" selection-end="209" vertical-scroll-proportion="0.25824964" vertical-offset="0" max-vertical-offset="697">
+          <folding>
+            <element signature="e#6#83#0" expanded="true" />
+            <element signature="e#105#149#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/MeCTL.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="7" selection-start="280" selection-end="280" vertical-scroll-proportion="0.25824964" vertical-offset="0" max-vertical-offset="697">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/Service/OAuthService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="32" column="36" selection-start="793" selection-end="793" vertical-scroll-proportion="0.7017544" vertical-offset="0" max-vertical-offset="2355">
+          <folding>
+            <element signature="e#6#83#0" expanded="true" />
+            <element signature="e#110#139#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/DataModel/ImageCollection.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="721">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/CTL/OAuthCTL.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="49" column="42" selection-start="1003" selection-end="1003" vertical-scroll-proportion="-15.291667" vertical-offset="278" max-vertical-offset="975">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/Helper/NotifyHelper.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="6" selection-start="130" selection-end="130" vertical-scroll-proportion="-1.5824964" vertical-offset="1223" max-vertical-offset="1920">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/DataModel/Image.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="50" column="0" selection-start="1210" selection-end="1210" vertical-scroll-proportion="0.9469153" vertical-offset="0" max-vertical-offset="1005">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/Service/UserService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="153" column="28" selection-start="5096" selection-end="5096" vertical-scroll-proportion="0.33333334" vertical-offset="2067" max-vertical-offset="2775">
+          <folding>
+            <element signature="e#6#83#0" expanded="true" />
+            <element signature="e#111#136#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/Service/TimeService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="945">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/CTL/BaseCTL.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="1" selection-start="903" selection-end="903" vertical-scroll-proportion="-18.125" vertical-offset="0" max-vertical-offset="525">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/ServiceDemoHotel/BaseService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="34" column="28" selection-start="0" selection-end="698" vertical-scroll-proportion="0.6241033" vertical-offset="0" max-vertical-offset="697">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/Service/BaseService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="42" column="1" selection-start="698" selection-end="698" vertical-scroll-proportion="-26.25" vertical-offset="0" max-vertical-offset="720">
+          <folding>
+            <element signature="e#6#84#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/CTLDemoHotel/BaseCTL.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="0" selection-start="373" selection-end="373" vertical-scroll-proportion="-10.0" vertical-offset="0" max-vertical-offset="525">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/Context/Context.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1290">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/CTL/FeedCTL.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="16" selection-start="339" selection-end="339" vertical-scroll-proportion="-9.375" vertical-offset="15" max-vertical-offset="2040">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/Service/FeedService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="33" column="43" selection-start="715" selection-end="715" vertical-scroll-proportion="3.75" vertical-offset="510" max-vertical-offset="3420">
+          <folding>
+            <element signature="e#112#137#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/private/src/Main/DB.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="35" selection-start="546" selection-end="546" vertical-scroll-proportion="0.38737446" vertical-offset="0" max-vertical-offset="697">
           <folding />
         </state>
       </provider>

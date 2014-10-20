@@ -14,7 +14,7 @@ class DB {
     private static $mongo, $db;
     public static function getMongo(){
         if(is_null(self::$mongo)){
-            self::$mongo = new \MongoClient();
+            self::$mongo = new \MongoClient("127.0.0.1");
             //$connection = new MongoClient( "mongodb://example.com" );
             //$connection = new MongoClient( "mongodb://example.com:27017" );
         }

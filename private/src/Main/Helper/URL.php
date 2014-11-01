@@ -11,10 +11,10 @@ namespace Main\Helper;
 
 class URL {
     public static function absolute($url){
-        return "http://demohotel-api.pla2app.com".$url;
+        return "http://thaweeyont-api.pla2app.com".$url;
     }
 
     public static function share($url){
-        return "http://pla2app.com/demohotel/share".$url;
+        return "http://pla2app.com/thaweeyont/share".$url;
     }
 }

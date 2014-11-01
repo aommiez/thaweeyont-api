@@ -10,59 +10,44 @@ namespace Main\Service;
 
 
 use Main\Context\Context;
-use Main\Context\ContextInterface;
+use Main\DataModel\Image;
 use Main\DB;
-use Main\Helper\Image;
-use Main\Helper\NotifyHelper;
+use Main\Exception\Service\ServiceException;
+use Main\Helper\ArrayHelper;
+use Main\Helper\MongoHelper;
 use Main\Helper\ResponseHelper;
 use Main\Helper\URL;
+use Valitron\Validator;
 
 class FeedService extends BaseService {
-    private $collection;
-    protected static $instance = null;
 
-    /** @return self */
-    public static function instance() {
-        if (is_null(static::$instance)) {
-            static::$instance = new static();
+    public function getCollection(){
+        $db = DB::getDB();
+        return $db->feed;
+    }
+
+    public function add($params, Context $ctx = null){
+        $v = new Validator($params);
+        $v->rule('required', ['thumb']);
+
+        if(!$v->validate()){
+            throw new ServiceException(ResponseHelper::validateError($v->errors()));
         }
-        return static::$instance;
+
+        $insert = ArrayHelper::filterKey(['name', 'detail','thumb'], $params);
+
+        $insert['thumb'] = Image::upload($params['thumb'])->toArray();
+
+        MongoHelper::setCreatedAt($insert);
+        MongoHelper::setUpdatedAt($insert);
+
+        $this->getCollection()->insert($insert);
+
+
+        return $insert;
     }
 
-    protected function __construct(){
-        $this->db = DB::getDB();
-        $this->collection = $this->db->feed;
-    }
-
-    public function add($params, ContextInterface $ctx = null){
-        if(is_null($ctx))
-            $ctx = $this->getCtx();
-
-        $entity = $params;
-        $imgModel = Image::instance()->add($params['thumb']);
-        $entity['thumb'] = $imgModel->getDBRef();
-
-        $seq = 1;
-        $maxCursor = $this->collection->find()->sort(array("seq"=> -1))->limit(1);
-        if($maxCursor->count(true) > 0){
-            $maxEntity = $maxCursor->getNext();
-            $seq = $maxEntity['seq']+1;
-        }
-        $entity['seq'] = $seq;
-
-        // insert
-        $this->collection->insert($entity);
-
-        // feed update timestamp (last_update)
-        TimeService::instance()->update('feed');
-
-        // add to notifycation
-        //NotifyHelper::sendAll($entity['_id'], $entity['name'], $entity['detail']);
-
-        return $this->get($entity['_id'], $ctx);
-    }
-
-    public function edit($id, $params, ContextInterface $ctx = null){
+    public function edit($id, $params, Context $ctx = null){
         if(is_null($ctx))
             $ctx = $this->getCtx();
 
@@ -103,7 +88,7 @@ class FeedService extends BaseService {
         return $this->get($id, $ctx);
     }
 
-    public function get($id, ContextInterface $ctx = null){
+    public function get($id, Context $ctx = null){
         if(is_null($ctx))
             $ctx = $this->getCtx();
 
@@ -133,8 +118,7 @@ class FeedService extends BaseService {
     }
 
     public function gets($options = array(), Context $ctx = null){
-        if(is_null($ctx))
-            $ctx = $this->getCtx();
+
 
         $default = array(
             "page"=> 1,
@@ -146,27 +130,23 @@ class FeedService extends BaseService {
         //$select = array("name", "detail", "feature", "price", "pictures");
         $condition = array();
 
-        $cursor = $this->collection
+        $cursor = $this->getCollection()
             ->find($condition)
             ->limit($options['limit'])
             ->skip($skip)
             ->sort(array('seq'=> -1));
 
-        $total = $this->collection->count($condition);
+        $total = $this->getCollection()->count($condition);
         $length = $cursor->count(true);
 
         $data = array();
         foreach($cursor as $item){
-            $thumbModel = \Main\Helper\Image::instance()->findByRef($item['thumb']);
-            $item['thumb'] = $thumbModel->toArrayResponse();
+            $item['thumb'] = Image::load($item['thumb'])->toArrayResponse();
+
 
             $item['id'] = $item['_id']->{'$id'};
             unset($item['_id']);
 
-            if(!$ctx->isAdminConsumer()){
-                $item['name'] = $item['name'][$ctx->getLang()];
-                $item['detail'] = $item['detail'][$ctx->getLang()];
-            }
 
             $item['node'] = $this->makeNode($item);
 
@@ -195,7 +175,7 @@ class FeedService extends BaseService {
         return $res;
     }
 
-    public function sort($param, ContextInterface $ctx = null){
+    public function sort($param, Context $ctx = null){
         foreach($param['id'] as $key=> $id){
             $mongoId = new \MongoId($id);
             $seq = $key+$param['offset'];
@@ -204,7 +184,7 @@ class FeedService extends BaseService {
         return array('success'=> true);
     }
 
-    public function delete($id, ContextInterface $ctx = null){
+    public function delete($id, Context $ctx = null){
         if(is_null($ctx))
             $ctx = $this->getCtx();
 

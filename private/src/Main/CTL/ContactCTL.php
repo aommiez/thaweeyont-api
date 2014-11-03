@@ -94,4 +94,38 @@ class ContactCTL extends BaseCTL {
                 return $ex->getResponse();
             }
     }
+
+
+    /**
+     * @GET
+     * @uri /comment
+     */
+    public function getComment(){
+        $item = ContactCommentService::getInstance()->gets($this->reqInfo->params(),$this->getCtx());
+        MongoHelper::removeId($item);
+        return $item;
+    }
+
+
+    /**
+     * @GET
+     * @uri /comment/[h:id]
+     */
+    public function getCommentById(){
+        $item = ContactCommentService::getInstance()->getCommentById($this->reqInfo->urlParam("id"),$this->getCtx());
+        MongoHelper::removeId($item);
+        return $item;
+    }
+
+
+    /**
+     * @DELETE
+     * @uri /comment/[h:id]
+     */
+    public function deleteCommentById(){
+        $item = ContactService::getInstance()->deleteCommentById($this->reqInfo->urlParam("id"),$this->getCtx());
+        MongoHelper::removeId($item);
+        return $item;
+    }
+
 }

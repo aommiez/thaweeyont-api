@@ -73,4 +73,18 @@ class ContactCommentService extends BaseService {
 
         return $entity;
     }
+
+    public function getCommentById ($id, Context $ctx) {
+        if(!($id instanceof \MongoId)){
+            $id = new \MongoId($id);
+        }
+        $item = $this->getCollection()->findOne(array("_id"=> $id));
+        return $item;
+    }
+
+    public function deleteCommentById ($id, Context $ctx) {
+        $this->getCollection()->remove(['_id'=> MongoHelper::mongoId($id)]);
+        return ['success'=> true];
+    }
+
 }

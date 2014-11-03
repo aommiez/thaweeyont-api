@@ -16,6 +16,7 @@ use Main\Exception\Service\ServiceException;
 use Main\Helper\ArrayHelper;
 use Main\Helper\MongoHelper;
 use Main\Helper\ResponseHelper;
+use Main\Helper\UpdatedTimeHelper;
 use Main\Helper\URL;
 use Valitron\Validator;
 
@@ -42,7 +43,7 @@ class FeedService extends BaseService {
         MongoHelper::setUpdatedAt($insert);
 
         $this->getCollection()->insert($insert);
-
+        UpdatedTimeHelper::update('feed', time());
 
         return $insert;
     }
@@ -79,11 +80,11 @@ class FeedService extends BaseService {
         unset($entity['name'], $entity['detail']);
 
         // insert
-        $this->collection->update(array('_id'=> $id), array('$set'=> $entity));
+        $this->getCollection()->update(array('_id'=> $id), array('$set'=> $entity));
 
 
         // feed update timestamp (last_update)
-        TimeService::instance()->update('feed');
+        UpdatedTimeHelper::update('feed', time());
 
         return $this->get($id, $ctx);
     }
@@ -118,8 +119,6 @@ class FeedService extends BaseService {
     }
 
     public function gets($options = array(), Context $ctx = null){
-
-
         $default = array(
             "page"=> 1,
             "limit"=> 15
@@ -172,6 +171,8 @@ class FeedService extends BaseService {
             $res['paging']['next'] = URL::absolute('/feed'.'?'.$nextQueryString);
         }
 
+        $lastUpdate = UpdatedTimeHelper::get('feed');
+        $res['last_updated'] = MongoHelper::timeToInt($lastUpdate['time']);
         return $res;
     }
 
@@ -179,8 +180,9 @@ class FeedService extends BaseService {
         foreach($param['id'] as $key=> $id){
             $mongoId = new \MongoId($id);
             $seq = $key+$param['offset'];
-            $this->collection->update(array('_id'=> $mongoId), array('$set'=> array('seq'=> $seq)));
+            $this->getCollection()->update(array('_id'=> $mongoId), array('$set'=> array('seq'=> $seq)));
         }
+        UpdatedTimeHelper::update('feed', time());
         return array('success'=> true);
     }
 
@@ -195,7 +197,7 @@ class FeedService extends BaseService {
         $this->collection->remove(array("_id"=> $id));
 
         // feed update timestamp (last_update)
-        TimeService::instance()->update('feed');
+        UpdatedTimeHelper::update('feed', time());
 
         return array("success"=> true);
     }

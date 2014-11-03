@@ -73,4 +73,11 @@ class MongoHelper {
         $now = new \MongoTimestamp();
         $item['updated_at'] = $now;
     }
+
+    public static function intToTime($int){
+        if(!($int instanceof \MongoTimestamp)){
+            $int = new \MongoTimestamp($int);
+        }
+        return $int;
+    }
 }

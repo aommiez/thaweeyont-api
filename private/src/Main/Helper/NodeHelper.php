@@ -17,6 +17,13 @@ class NodeHelper {
         ];
     }
 
+    public static function promotion($id){
+        $id = MongoHelper::standardId($id);
+        return [
+            'share'=> URL::share('/promotion.php?id='.$id)
+        ];
+    }
+
     public static function roomtype($id){
         $id = MongoHelper::standardId($id);
         return [

@@ -31,7 +31,7 @@ class UpdatedTimeHelper {
         self::getCollection()->update(['_id'=> $key],
             [
                 '$set'=> ['time'=> MongoHelper::intToTime($value)],
-                '$setOnInsert'=> ['time'=> MongoHelper::intToTime($value)]
+//                '$setOnInsert'=> ['time'=> MongoHelper::intToTime($value)]
             ],
             ['upsert'=> true]);
     }

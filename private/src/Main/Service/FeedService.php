@@ -182,7 +182,10 @@ class FeedService extends BaseService {
             $seq = $key+$param['offset'];
             $this->getCollection()->update(array('_id'=> $mongoId), array('$set'=> array('seq'=> $seq)));
         }
+
+        // feed update timestamp (last_update)
         UpdatedTimeHelper::update('feed', time());
+
         return array('success'=> true);
     }
 

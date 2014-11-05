@@ -16,6 +16,7 @@ use Main\Exception\Service\ServiceException;
 use Main\Helper\ArrayHelper;
 use Main\Helper\MongoHelper;
 use Main\Helper\ResponseHelper;
+use Main\Helper\UpdatedTimeHelper;
 use Main\Helper\URL;
 use Valitron\Validator;
 
@@ -26,23 +27,15 @@ class ServiceService extends BaseService {
 
     public function addItem($params, Context $ctx){
         $v = new Validator($params);
-        $v->rule('required', ['translate', 'pictures','price']);
+        $v->rule('required', ['name', 'detail', 'feature', 'pictures','price']);
 
         if(!$v->validate()){
             throw new ServiceException(ResponseHelper::validateError($v->errors()));
         }
 
-        $insert = ArrayHelper::filterKey(['price'], $params);
-        foreach($params['translate'] as $key=> $value){
-            $v = new Validator($value);
-            $v->rule('required', ['name', 'detail', 'feature']);
+        $insert = ArrayHelper::filterKey(['price', 'name', 'detail', 'feature'], $params);
 
-            if(!$v->validate()){
-                throw new ServiceException(ResponseHelper::validateError($v->errors()));
-            }
 
-            $insert['translate'][$key] = ArrayHelper::filterKey(['name', 'detail', 'feature'], $value);
-        }
 
         if(isset($params['parent_id'])){
             if($this->getCollection()->count(['_id'=> MongoHelper::mongoId($params['parent_id']), 'type'=> 'folder']) == 0){
@@ -78,28 +71,21 @@ class ServiceService extends BaseService {
             $this->updateChildren($insert['parent_id']);
         }
 
+        // service update timestamp (last_update)
+        UpdatedTimeHelper::update('service', time());
+
         return $this->get($insert['_id'], $ctx);
     }
 
     public function addFolder($params, Context $ctx){
         $v = new Validator($params);
-        $v->rule('required', ['translate', 'thumb']);
+        $v->rule('required', ['name', 'thumb']);
 
         if(!$v->validate()){
             throw new ServiceException(ResponseHelper::validateError($v->errors()));
         }
 
-        $insert = ArrayHelper::filterKey(['translate', 'thumb'], $params);
-        foreach($insert['translate'] as $key=> $value){
-            $v = new Validator($value);
-            $v->rule('required', ['name', 'detail']);
-
-            if(!$v->validate()){
-                throw new ServiceException(ResponseHelper::validateError($v->errors()));
-            }
-
-            $insert['translate'][$key] = ArrayHelper::filterKey(['name', 'detail'], $value);
-        }
+        $insert = ArrayHelper::filterKey(['name', 'thumb'], $params);
 
         if(isset($params['parent_id'])){
             if($this->getCollection()->count(['_id'=> MongoHelper::mongoId($params['parent_id']), 'type'=> 'folder']) == 0){
@@ -124,6 +110,9 @@ class ServiceService extends BaseService {
         if(isset($insert['parent_id'])){
             $this->updateChildren($insert['parent_id']);
         }
+
+        // service update timestamp (last_update)
+        UpdatedTimeHelper::update('service', time());
 
         return $this->get($insert['_id'], $ctx);
     }
@@ -175,6 +164,10 @@ class ServiceService extends BaseService {
             $nextQueryString = http_build_query(['page'=> (int)$options['page']+1, 'limit'=> (int)$options['limit']]);
             $res['paging']['next'] = URL::absolute('/service'.'?'.$nextQueryString);
         }
+
+        // add last_update to response
+        $lastUpdate = UpdatedTimeHelper::get('service');
+        $res['last_updated'] = MongoHelper::timeToInt($lastUpdate['time']);
 
         return $res;
     }

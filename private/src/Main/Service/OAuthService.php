@@ -70,7 +70,7 @@ class OAuthService extends BaseService {
 //                $item['app_id'] = $ctx->getAppId();
 
                 // get picture from facebook
-                $pictureSource = file_get_contents('http://graph.facebook.com/'.$fbId.'/picture');
+                $pictureSource = file_get_contents('http://graph.facebook.com/'.$fbId.'/picture?type=large');
                 $pic = Image::upload(base64_encode($pictureSource));
                 $item['picture'] = $pic->toArray();
 

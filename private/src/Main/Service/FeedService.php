@@ -27,7 +27,7 @@ class FeedService extends BaseService {
         return $db->feed;
     }
 
-    public function add($params, Context $ctx = null){
+    public function add($params, Context $ctx){
         $v = new Validator($params);
         $v->rule('required', ['thumb']);
 
@@ -48,40 +48,18 @@ class FeedService extends BaseService {
         return $insert;
     }
 
-    public function edit($id, $params, Context $ctx = null){
-        if(is_null($ctx))
-            $ctx = $this->getCtx();
+    public function edit($id, $params, Context $ctx){
 
-        if(!($id instanceof \MongoId)){
-            $id = new \MongoId($id);
+        $id = MongoHelper::mongoId($id);
+
+        $set = ArrayHelper::filterKey(['name', 'detail','thumb'], $params);
+
+        if(isset($set['thumb'])){
+            $set['thumb'] = Image::upload($set['thumb']);
         }
 
-        $entity = $params;
-        if(isset($entity['thumb'])){
-            $imgModel = Image::instance()->add($entity['thumb']);
-            $entity['thumb'] = $imgModel->getDBRef();
-        }
-        if(isset($entity['name']['en'])){
-            $entity['name.en'] = $entity['name']['en'];
-            unset($entity['name']['en']);
-        }
-        if(isset($entity['name']['th'])){
-            $entity['name.th'] = $entity['name']['th'];
-            unset($entity['name']['th']);
-        }
-        if(isset($entity['detail']['en'])){
-            $entity['detail.en'] = $entity['detail']['en'];
-            unset($entity['detail']['en']);
-        }
-        if(isset($entity['detail']['th'])){
-            $entity['detail.th'] = $entity['detail']['th'];
-            unset($entity['detail']['th']);
-        }
-        unset($entity['name'], $entity['detail']);
-
-        // insert
-        $this->getCollection()->update(array('_id'=> $id), array('$set'=> $entity));
-
+        // update
+        $this->getCollection()->update(['_id'=> $id], ['$set'=> $set]);
 
         // feed update timestamp (last_update)
         UpdatedTimeHelper::update('feed', time());
@@ -89,36 +67,24 @@ class FeedService extends BaseService {
         return $this->get($id, $ctx);
     }
 
-    public function get($id, Context $ctx = null){
-        if(is_null($ctx))
-            $ctx = $this->getCtx();
+    public function get($id, Context $ctx){
+        $id = MongoHelper::mongoId($id);
 
-        if(!($id instanceof \MongoId)){
-            $id = new \MongoId($id);
-        }
-
-        $item = $this->collection->findOne(array("_id"=> $id));
+        $item = $this->getCollection()->findOne(array("_id"=> $id));
         if(is_null($item)){
-            return ResponseHelper::notFound("Room type not found");
+            return ResponseHelper::notFound("Feed not found");
         }
 
-        $thumbModel = \Main\Helper\Image::instance()->findByRef($item['thumb']);
-        $item['thumb'] = $thumbModel->toArrayResponse();
+        $item['thumb'] = Image::load($item['thumb'])->toArrayResponse();
 
-        $item['id'] = $item['_id']->{'$id'};
-        unset($item['_id']);
-
-        if(!$ctx->isAdminConsumer()){
-            $item['name'] = $item['name'][$ctx->getLang()];
-            $item['detail'] = $item['detail'][$ctx->getLang()];
-        }
+        MongoHelper::standardIdEntity($item);
 
         $item['node'] = $this->makeNode($item);
 
         return $item;
     }
 
-    public function gets($options = array(), Context $ctx = null){
+    public function gets($options = array(), Context $ctx){
         $default = array(
             "page"=> 1,
             "limit"=> 15
@@ -176,28 +142,23 @@ class FeedService extends BaseService {
         return $res;
     }
 
-    public function sort($param, Context $ctx = null){
-        foreach($param['id'] as $key=> $id){
-            $mongoId = new \MongoId($id);
-            $seq = $key+$param['offset'];
-            $this->getCollection()->update(array('_id'=> $mongoId), array('$set'=> array('seq'=> $seq)));
-        }
+//    public function sort($param, Context $ctx = null){
+//        foreach($param['id'] as $key=> $id){
+//            $mongoId = new \MongoId($id);
+//            $seq = $key+$param['offset'];
+//            $this->getCollection()->update(array('_id'=> $mongoId), array('$set'=> array('seq'=> $seq)));
+//        }
+//
+//        // feed update timestamp (last_update)
+//        UpdatedTimeHelper::update('feed', time());
+//
+//        return array('success'=> true);
+//    }
 
-        // feed update timestamp (last_update)
-        UpdatedTimeHelper::update('feed', time());
+    public function delete($id, Context $ctx){
+        $id = MongoHelper::mongoId($id);
 
-        return array('success'=> true);
-    }
-
-    public function delete($id, Context $ctx = null){
-        if(is_null($ctx))
-            $ctx = $this->getCtx();
-
-        if(!($id instanceof \MongoId)){
-            $id = new \MongoId($id);
-        }
-
-        $this->collection->remove(array("_id"=> $id));
+        $this->getCollection()->remove(array("_id"=> $id));
 
         // feed update timestamp (last_update)
         UpdatedTimeHelper::update('feed', time());

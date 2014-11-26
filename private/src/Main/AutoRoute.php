@@ -50,7 +50,7 @@ class AutoRoute {
         $router = new \AltoRouter();
 
         if($_SERVER['HTTP_HOST']== 'localhost' || $_SERVER['HTTP_HOST']== '192.168.0.111'){
-            $router->setBasePath('/rtsms');
+            $router->setBasePath('/thaweeyont-api');
         }
         $ctls = self::readCTL();
         foreach($ctls as $ctl){

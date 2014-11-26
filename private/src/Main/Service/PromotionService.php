@@ -12,9 +12,11 @@ namespace Main\Service;
 use Main\Context\Context;
 use Main\DataModel\Image;
 use Main\DB;
+use Main\Event\Event;
 use Main\Exception\Service\ServiceException;
 use Main\Helper\ArrayHelper;
 use Main\Helper\MongoHelper;
+use Main\Helper\NotifyHelper;
 use Main\Helper\ResponseHelper;
 use Main\Helper\UpdatedTimeHelper;
 use Main\Helper\URL;
@@ -47,6 +49,11 @@ class PromotionService extends BaseService {
 
         // service update timestamp (last_update)
         UpdatedTimeHelper::update('promotion', time());
+
+        // notify
+        Event::add('after_response', function() use($insert){
+            NotifyHelper::sendAll($insert['_id'], 'promotion', 'ได้เพิ่มโปรโมชั่น', $insert['detail']);
+        });
 
         return $insert;
     }

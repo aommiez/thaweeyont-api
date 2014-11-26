@@ -48,12 +48,27 @@ class ContactCTL extends BaseCTL {
     }
 
     /**
+     * @GET
+     * @uri /branch/get_by_coordinate
+     */
+    public function getBranchByCoordinate () {
+        try {
+            $item = ContactService::getInstance()->getBranchByLocation($this->reqInfo->param('lat'), $this->reqInfo->param('lng'));
+            MongoHelper::standardIdEntity($item);
+        }
+        catch (ServiceException $ex) {
+            return $ex->getResponse();
+        }
+        return $item;
+    }
+
+    /**
      * @POST
      * @uri /branches
      */
 
     public function addBranches () {
-        $item = ContactService::getInstance()->addBranches($this->getCtx());
+        $item = ContactService::getInstance()->addBranches($this->reqInfo->params(), $this->getCtx());
         MongoHelper::removeId($item);
         return $item;
     }
@@ -63,7 +78,7 @@ class ContactCTL extends BaseCTL {
      * @uri /branches
      */
     public function editBranches () {
-        $item = ContactService::getInstance()->editBranches($this->getCtx());
+        $item = ContactService::getInstance()->editBranches($this->reqInfo->urlParam('id'), $this->reqInfo->params(), $this->getCtx());
         MongoHelper::removeId($item);
         return $item;
     }
@@ -128,4 +143,71 @@ class ContactCTL extends BaseCTL {
         return $item;
     }
 
+    /**
+     * @GET
+     * @uri /branches/[h:id]/tel
+     */
+    public function getTels(){
+        $res = ContactService::getInstance()->getTels($this->reqInfo->urlParam("id"), $this->reqInfo->params(), $this->getCtx());
+        foreach($res['data'] as $key=> $item){
+            MongoHelper::standardIdEntity($item);
+            $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
+            $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
+            $item['branch_id'] = MongoHelper::standardId($item['branch_id']);
+
+            $res['data'][$key] = $item;
+        }
+        return $res;
+    }
+
+    /**
+     * @POST
+     * @uri /branches/[h:id]/tel
+     */
+    public function addTel(){
+        try {
+            $item = ContactService::getInstance()->addTel($this->reqInfo->urlParam("id"), $this->reqInfo->params(), $this->getCtx());
+            MongoHelper::standardIdEntity($item);
+            $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
+            $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
+            $item['branch_id'] = MongoHelper::standardId($item['branch_id']);
+            return $item;
+        }
+        catch (ServiceException $ex){
+            return $ex->getResponse();
+        }
+    }
+
+    /**
+     * @GET
+     * @uri /branches/tel/[h:id]
+     */
+    public function getTel(){
+        try {
+            $item = ContactService::getInstance()->getTel($this->reqInfo->urlParam('id'), $this->getCtx());
+            MongoHelper::standardIdEntity($item);
+            $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
+            $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
+            $item['branch_id'] = MongoHelper::standardId($item['branch_id']);
+            return $item;
+        }
+        catch (ServiceException $ex){
+            return $ex->getResponse();
+        }
+    }
+
+    /**
+     * @DELETE
+     * @uri /branches/tel/[h:id]
+     */
+    public function removeTel(){
+        try {
+            return [
+                'success'=> ContactService::getInstance()->removeTel($this->reqInfo->urlParam('id'), $this->getCtx())
+            ];
+        }
+        catch (ServiceException $ex){
+            return $ex->getResponse();
+        }
+    }
 }

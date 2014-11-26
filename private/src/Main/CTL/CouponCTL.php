@@ -51,10 +51,14 @@ class CouponCTL extends BaseCTL {
                 if($item['type']=="coupon" || true){
                     $item['thumb'] = Image::load($item['thumb'])->toArrayResponse();
                     $user = $this->getCtx()->getUser();
-                    $item['used_status'] = false;
+                    $item['used_status'] = "none";
                     foreach($item['used_users'] as $value){
                         if($value['user']['_id'] == $user['_id']){
-                            $item['used_status'] = true;
+                            if(MongoHelper::timeToInt($value['expire']) <= time()){
+                                $item['used_status'] = "timeout";
+                                break;
+                            }
+                            $item['used_status'] = "countdown";
                             break;
                         }
                     }
@@ -96,10 +100,14 @@ class CouponCTL extends BaseCTL {
             if($item['type']=="coupon" || true){
                 $item['thumb'] = Image::load($item['thumb'])->toArrayResponse();
                 $user = $this->getCtx()->getUser();
-                $item['used_status'] = false;
+                $item['used_status'] = "none";
                 foreach($item['used_users'] as $value){
-                    if($value['user']['_id'] == $user['_id'] && MongoHelper::timeToInt($value['expire']) < time()){
-                        $item['used_status'] = true;
+                    if($value['user']['_id'] == $user['_id']){
+                        if(MongoHelper::timeToInt($value['expire']) <= time()){
+                            $item['used_status'] = "timeout";
+                            break;
+                        }
+                        $item['used_status'] = "countdown";
                         break;
                     }
                 }
@@ -170,7 +178,7 @@ class CouponCTL extends BaseCTL {
     public function couponRequest(){
         try {
             $res = CouponService::getInstance()->requestCoupon($this->reqInfo->urlParam('id'), $this->getCtx());
-            return ['success'=> $res];
+            return $res;
         }
         catch(ServiceException $ex){
             return $ex->getResponse();

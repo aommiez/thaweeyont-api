@@ -71,6 +71,9 @@ class OAuthService extends BaseService {
 
                 // get picture from facebook
                 $pictureSource = file_get_contents('http://graph.facebook.com/'.$fbId.'/picture?type=large');
+                if(strlen($pictureSource) == 0){
+                    throw new ServiceException(ResponseHelper::error("Can't read facebook profile picture."));
+                }
                 $pic = Image::upload(base64_encode($pictureSource));
                 $item['picture'] = $pic->toArray();
 

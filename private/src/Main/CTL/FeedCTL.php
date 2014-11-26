@@ -7,6 +7,8 @@
  */
 
 namespace Main\CTL;
+use Main\Helper\MongoHelper;
+use Main\Helper\NodeHelper;
 use Main\Helper\Validate;
 use Main\Service\FeedGalleryService;
 use Main\Service\FeedService;
@@ -22,6 +24,12 @@ class FeedCTL extends BaseCTL {
      */
     public function gets(){
         $items = FeedService::getInstance()->gets($this->reqInfo->params(), $this->getCtx());
+        foreach($items['data'] as $key=> $item){
+            $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
+            $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
+            $item['node'] = NodeHelper::news($item['id']);
+            $items['data'][$key] = $item;
+        }
         return $items;
     }
 
@@ -30,6 +38,9 @@ class FeedCTL extends BaseCTL {
      */
     public function add(){
         $item = FeedService::getInstance()->add($this->reqInfo->params(), $this->getCtx());
+        $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
+        $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
+        $item['node'] = NodeHelper::news($item['id']);
         return $item;
     }
 
@@ -38,8 +49,11 @@ class FeedCTL extends BaseCTL {
      * @uri /[h:id]
      */
     public function get(){
-        $items = FeedService::getInstance()->get($this->reqInfo->urlParam('id'), $this->getCtx());
-        return $items;
+        $item = FeedService::getInstance()->get($this->reqInfo->urlParam('id'), $this->getCtx());
+        $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
+        $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
+        $item['node'] = NodeHelper::news($item['id']);
+        return $item;
     }
 
     /**
@@ -48,6 +62,9 @@ class FeedCTL extends BaseCTL {
      */
     public function edit(){
         $item = FeedService::getInstance()->edit($this->reqInfo->urlParam('id'), $this->reqInfo->params(), $this->getCtx());
+        $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
+        $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
+        $item['node'] = NodeHelper::news($item['id']);
         return $item;
     }
 
@@ -68,6 +85,4 @@ class FeedCTL extends BaseCTL {
         $res = FeedService::getInstance()->sort($this->reqInfo->params(), $this->getCtx());
         return $res;
     }
-
-
 }

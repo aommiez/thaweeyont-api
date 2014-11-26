@@ -27,13 +27,13 @@ class ServiceService extends BaseService {
 
     public function addItem($params, Context $ctx){
         $v = new Validator($params);
-        $v->rule('required', ['name', 'detail', 'feature', 'pictures','price']);
+        $v->rule('required', ['name', 'detail', 'pictures','price']);
 
         if(!$v->validate()){
             throw new ServiceException(ResponseHelper::validateError($v->errors()));
         }
 
-        $insert = ArrayHelper::filterKey(['price', 'name', 'detail', 'feature'], $params);
+        $insert = ArrayHelper::filterKey(['price', 'name', 'detail'], $params);
 
 
 
@@ -127,7 +127,7 @@ class ServiceService extends BaseService {
         $skip = ($options['page']-1)*$options['limit'];
 
         // condition parent_id
-        $condition = ['parent'=> null];
+        $condition = ['parent_id'=> null];
         if(isset($options['parent_id'])){
             $condition = ['parent_id'=> MongoHelper::mongoId($options['parent_id'])];
         }

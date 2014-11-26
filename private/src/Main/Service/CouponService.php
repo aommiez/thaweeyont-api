@@ -12,9 +12,11 @@ namespace Main\Service;
 use Main\Context\Context;
 use Main\DataModel\Image;
 use Main\DB;
+use Main\Event\Event;
 use Main\Exception\Service\ServiceException;
 use Main\Helper\ArrayHelper;
 use Main\Helper\MongoHelper;
+use Main\Helper\NotifyHelper;
 use Main\Helper\ResponseHelper;
 use Main\Helper\UpdatedTimeHelper;
 use Main\Helper\URL;
@@ -51,6 +53,11 @@ class CouponService extends BaseService {
 
         // service update timestamp (last_update)
         UpdatedTimeHelper::update('coupon', time());
+
+        // notify
+        Event::add('after_response', function() use($insert){
+            NotifyHelper::sendAll($insert['_id'], 'coupon', 'ได้เพิ่มคูปอง', $insert['detail']);
+        });
 
         return $insert;
     }
@@ -172,13 +179,17 @@ class CouponService extends BaseService {
             'code'=> $code['_id']
         ];
 
+        $coupon = $this->get($id, $ctx);
+        foreach($coupon['used_users'] as $key=> $value){
+            if($value['user']['_id']==$user['_id'])
+                return $value;
+        }
+
         $this->getCollection()->update(
-            ['_id'=> MongoHelper::mongoId($id), 'type'=> "coupon"],
+            ['_id'=> MongoHelper::mongoId($id)],
             ['$push'=> ['used_users'=> $used_user], '$inc'=> ['used_count'=> 1]]
         );
 
-        return [
-            $used_user
-        ];
+        return $used_user;
     }
 }

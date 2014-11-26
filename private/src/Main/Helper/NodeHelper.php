@@ -24,14 +24,6 @@ class NodeHelper {
         ];
     }
 
-    public static function roomtype($id){
-        $id = MongoHelper::standardId($id);
-        return [
-            'picture'=> URL::absolute('/roomtype/'.$id.'/picture'),
-            'share'=> URL::share('/roomtype/'.$id)
-        ];
-    }
-
     public static function place($id){
         $id = MongoHelper::standardId($id);
         return [
@@ -50,6 +42,7 @@ class NodeHelper {
         $id = MongoHelper::standardId($id);
         return [
             'picture'=> URL::absolute('/service/'.$id.'/picture'),
+            'share'=> URL::share('/service.php?id='.$id)
         ];
     }
 

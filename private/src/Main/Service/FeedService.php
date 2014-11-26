@@ -12,9 +12,11 @@ namespace Main\Service;
 use Main\Context\Context;
 use Main\DataModel\Image;
 use Main\DB;
+use Main\Event\Event;
 use Main\Exception\Service\ServiceException;
 use Main\Helper\ArrayHelper;
 use Main\Helper\MongoHelper;
+use Main\Helper\NotifyHelper;
 use Main\Helper\ResponseHelper;
 use Main\Helper\UpdatedTimeHelper;
 use Main\Helper\URL;
@@ -44,6 +46,11 @@ class FeedService extends BaseService {
 
         $this->getCollection()->insert($insert);
         UpdatedTimeHelper::update('feed', time());
+
+        // notify
+        Event::add('after_response', function() use($insert){
+            NotifyHelper::sendAll($insert['_id'], 'news', 'ได้เพิ่มข่าว', $insert['detail']);
+        });
 
         return $insert;
     }

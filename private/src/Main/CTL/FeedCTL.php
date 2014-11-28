@@ -7,6 +7,7 @@
  */
 
 namespace Main\CTL;
+use Main\Exception\Service\ServiceException;
 use Main\Helper\MongoHelper;
 use Main\Helper\NodeHelper;
 use Main\Helper\Validate;
@@ -23,25 +24,35 @@ class FeedCTL extends BaseCTL {
      * @GET
      */
     public function gets(){
-        $items = FeedService::getInstance()->gets($this->reqInfo->params(), $this->getCtx());
-        foreach($items['data'] as $key=> $item){
-            $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
-            $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
-            $item['node'] = NodeHelper::news($item['id']);
-            $items['data'][$key] = $item;
+        try {
+            $items = FeedService::getInstance()->gets($this->reqInfo->params(), $this->getCtx());
+            foreach ($items['data'] as $key => $item) {
+                $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
+                $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
+                $item['node'] = NodeHelper::news($item['id']);
+                $items['data'][$key] = $item;
+            }
+            return $items;
         }
-        return $items;
+        catch (ServiceException $e){
+            return $e->getResponse();
+        }
     }
 
     /**
      * @POST
      */
     public function add(){
-        $item = FeedService::getInstance()->add($this->reqInfo->params(), $this->getCtx());
-        $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
-        $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
-        $item['node'] = NodeHelper::news($item['id']);
-        return $item;
+        try {
+            $item = FeedService::getInstance()->add($this->reqInfo->params(), $this->getCtx());
+            $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
+            $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
+            $item['node'] = NodeHelper::news($item['id']);
+            return $item;
+        }
+        catch (ServiceException $e){
+            return $e->getResponse();
+        }
     }
 
     /**
@@ -49,11 +60,16 @@ class FeedCTL extends BaseCTL {
      * @uri /[h:id]
      */
     public function get(){
-        $item = FeedService::getInstance()->get($this->reqInfo->urlParam('id'), $this->getCtx());
-        $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
-        $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
-        $item['node'] = NodeHelper::news($item['id']);
-        return $item;
+        try {
+            $item = FeedService::getInstance()->get($this->reqInfo->urlParam('id'), $this->getCtx());
+            $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
+            $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
+            $item['node'] = NodeHelper::news($item['id']);
+            return $item;
+        }
+        catch (ServiceException $e){
+            return $e->getResponse();
+        }
     }
 
     /**
@@ -61,11 +77,16 @@ class FeedCTL extends BaseCTL {
      * @uri /[h:id]
      */
     public function edit(){
-        $item = FeedService::getInstance()->edit($this->reqInfo->urlParam('id'), $this->reqInfo->params(), $this->getCtx());
-        $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
-        $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
-        $item['node'] = NodeHelper::news($item['id']);
-        return $item;
+        try {
+            $item = FeedService::getInstance()->edit($this->reqInfo->urlParam('id'), $this->reqInfo->params(), $this->getCtx());
+            $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
+            $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
+            $item['node'] = NodeHelper::news($item['id']);
+            return $item;
+        }
+        catch (ServiceException $e){
+            return $e->getResponse();
+        }
     }
 
     /**
@@ -73,8 +94,13 @@ class FeedCTL extends BaseCTL {
      * @uri /[h:id]
      */
     public function delete(){
-        $response = FeedService::getInstance()->delete($this->reqInfo->urlParam('id'));
-        return $response;
+        try {
+            $response = FeedService::getInstance()->delete($this->reqInfo->urlParam('id'), $this->getCtx());
+            return $response;
+        }
+        catch (ServiceException $e){
+            return $e->getResponse();
+        }
     }
 
     /**
@@ -82,7 +108,12 @@ class FeedCTL extends BaseCTL {
      * @uri /sort
      */
     public function sort(){
-        $res = FeedService::getInstance()->sort($this->reqInfo->params(), $this->getCtx());
-        return $res;
+        try {
+            $res = FeedService::getInstance()->sort($this->reqInfo->params(), $this->getCtx());
+            return $res;
+        }
+        catch (ServiceException $e){
+            return $e->getResponse();
+        }
     }
 }

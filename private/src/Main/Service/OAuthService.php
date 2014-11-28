@@ -28,6 +28,8 @@ class OAuthService extends BaseService {
     }
 
     public function facebook($params, Context $ctx){
+        file_put_contents('test.txt', print_r($params, true));
+
         FacebookSession::setDefaultApplication('717935634950887','b43f5c57b6af38948dbb3a6a4ce47eae');
 
         $v = new Validator($params);
@@ -88,7 +90,9 @@ class OAuthService extends BaseService {
 
             // remember device token
             if(isset($params['ios_device_token'])){
-                $this->getUsersCollection()->update(['_id'=> $item['_id']], ['$addToSet'=> ['ios_device_token'=> $params['ios_device_token'] ]]);
+                if(isset($params['ios_device_token']['type']) && isset($params['ios_device_token']['key'])){
+                    $this->getUsersCollection()->update(['_id'=> $item['_id']], ['$addToSet'=> ['ios_device_token'=> $params['ios_device_token'] ]]);
+                }
             }
             if(isset($params['android_token'])){
                 $this->getUsersCollection()->update(['_id'=> $item['_id']], ['$addToSet'=> ['android_token'=> $params['android_token'] ]]);

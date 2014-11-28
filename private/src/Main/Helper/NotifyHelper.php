@@ -12,13 +12,20 @@ namespace Main\Helper;
 use Main\DB;
 
 class NotifyHelper {
-    protected static $apnHelper = null;
+    protected static $apnHelperDev = null, $apnHelperProduct = null;
 
-    protected static function getApnHelper(){
-        if(is_null(self::$apnHelper)){
-            self::$apnHelper = new APNHelper(file_get_contents('private/apple/dev.pem'), 'gateway.sandbox.push.apple.com', 2195);
+    protected static function getApnHelperDev(){
+        if(is_null(self::$apnHelperDev)){
+            self::$apnHelperDev = new APNHelper(file_get_contents('private/apple/dev.pem'), 'gateway.sandbox.push.apple.com', 2195);
         }
-        return self::$apnHelper;
+        return self::$apnHelperDev;
+    }
+
+    protected static function getApnHelperProduct(){
+        if(is_null(self::$apnHelperProduct)){
+            self::$apnHelperProduct = new APNHelper(file_get_contents('private/apple/product.pem'), 'gateway.push.apple.com', 2195);
+        }
+        return self::$apnHelperProduct;
     }
 
     public static function cutMessage($message){
@@ -76,7 +83,12 @@ class NotifyHelper {
             if(isset($item['ios_device_token'])){
                 foreach($item['ios_device_token'] as $token){
                     try {
-                        self::getApnHelper()->send($token, $pushMessage, $args);
+                        if($token['type'] == "dev"){
+                            self::getApnHelperDev()->send($token['key'], $pushMessage, $args);
+                        }
+                        else if($token['type'] == "product"){
+                            self::getApnHelperProduct()->send($token['key'], $pushMessage, $args);
+                        }
                     }
                     catch (\Exception $e){
                         error_log($e->getCode()." ".$e->getMessage()." *FILE:".$e->getFile()." ".$e->getLine());

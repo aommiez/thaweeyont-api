@@ -39,64 +39,69 @@ class ContactService extends BaseService {
     public function get(Context $ctx){
         $contact = $this->getCollection()->findOne([], ["facebook", "website", "email"]);
         if(is_null($contact)){
-            $contact = [
-                'facebook'=> 'https://www.facebook.com/thaweeyont',
-                'website'=> 'http://www.thaweeyont.com',
-                'email'=> 'callcenter@thaweeyont.com',
-                'comments'=> []
-            ];
-            $this->getCollection()->insert($contact);
+            throw new ServiceException(ResponseHelper::notFound());
         }
         return $contact;
     }
 
-    public function getBranches(Context $ctx){
-        $branches = $this->getBranchesCollection()->count();
-        if($branches == 0){
-            $img = Image::upload(base64_encode(file_get_contents("private/default/default-user.png")));
-            $branches = [
-                'branchName'=> 'https://www.facebook.com/thaweeyont',
-                'branchTel'=> 'http://example.com',
-                'branchEmail'=> 'example@example.com',
-                'branchFax' => '02-111-1111',
-                'branchAddress' => 'ฟหดฟดฟหกหฟกฟหกห',
-                'location'=> [
-                    'lat'=> "1.23044454",
-                    'lng'=> "1.12315643"
-                ],
-                'comments'=> [],
-                'pictures' => [
-                    $img->toArray()
-                ]
+    public function getBranches($options, Context $ctx){
+        $default = array(
+            "page"=> 1,
+            "limit"=> 15
+        );
+        $options = array_merge($default, $options);
 
-            ];
-            $img = Image::upload(base64_encode(file_get_contents("private/default/default-user.png")));
-            $branches1 = [
-                'branchName'=> 'https://www.facebook.com/thaweeyont',
-                'branchTel'=> 'http://asdasdsadd.com',
-                'branchEmail'=> 'sadasdsad@example.com',
-                'branchFax' => '02-333-44444',
-                'branchAddress' => 'ๆไผปแกดเ้ิำๆกฟหก',
-                'location'=> [
-                    'lat'=> "2.23044454",
-                    'lng'=> "2.12315643"
-                ],
-                'comments'=> [],
-                'pictures' => [
-                    $img->toArray()
-                ]
-            ];
-            $this->getBranchesCollection()->insert($branches);
-            $this->getBranchesCollection()->insert($branches1);
+        $skip = ($options['page']-1)*$options['limit'];
+        //$select = array("name", "detail", "feature", "price", "pictures");
+        $condition = array();
+
+        $cursor = $this->getBranchesCollection()
+            ->find($condition)
+            ->limit($options['limit'])
+            ->skip($skip)
+            ->sort(array('created_at'=> -1));
+
+        $total = $this->getBranchesCollection()->count($condition);
+        $length = $cursor->count(true);
+
+        $data = array();
+        foreach($cursor as $item){
+            $data[] = $item;
         }
-        $branches = $this->getBranchesCollection()->find();
-        $arr = array("data"=> array());
-        foreach ($branches as $value ) {
-            MongoHelper::standardIdEntity($value);
-            $value['pictures'] = Image::loads($value['pictures'])->toArrayResponse();
-            $arr["data"][] = $value;
+
+        $res = [
+            'length'=> $length,
+            'total'=> $total,
+            'data'=> $data,
+            'paging'=> [
+                'page'=> (int)$options['page'],
+                'limit'=> (int)$options['limit']
+            ]
+        ];
+
+        $pagingLength = $total/(int)$options['limit'];
+        $pagingLength = floor($pagingLength)==$pagingLength? floor($pagingLength): floor($pagingLength) + 1;
+        $res['paging']['length'] = $pagingLength;
+        $res['paging']['current'] = (int)$options['page'];
+        if(((int)$options['page'] * (int)$options['limit']) < $total){
+            $nextQueryString = http_build_query(['page'=> (int)$options['page']+1, 'limit'=> (int)$options['limit']]);
+            $res['paging']['next'] = URL::absolute('/feed'.'?'.$nextQueryString);
         }
-        return $arr;
+
+        $lastUpdate = UpdatedTimeHelper::get('feed');
+        $res['last_updated'] = MongoHelper::timeToInt($lastUpdate['time']);
+        return $res;
+    }
+
+    public function getBranch($id, Context $ctx){
+        $id = MongoHelper::mongoId($id);
+
+        $item = $this->getBranchesCollection()->findOne(array("_id"=> $id));
+        if(is_null($item)){
+            return ResponseHelper::notFound("Branch not found");
+        }
+
+        return $item;
     }
 
     public function edit ($params, Context $ctx) {
@@ -114,33 +119,40 @@ class ContactService extends BaseService {
 
     public function addBranches ($params, Context $ctx) {
         $arrPic = array();
-        $arr = $params;
         $v = new Validator($params);
         $v->rule('required', ['branchName', 'branchTel', 'branchEmail', 'branchFax', 'branchAddress','location','pictures' ]);
 
         if(!$v->validate()){
             throw new ServiceException(ResponseHelper::validateError($v->errors()));
         }
+        $arr = ArrayHelper::filterKey(['branchName', 'branchTel', 'branchEmail', 'branchFax', 'branchAddress','location','pictures'], $params);
 
-        foreach ($params['pictures'] as $pic) {
+        foreach ($arr['pictures'] as $pic) {
             $arrPic[] = Image::upload($pic)->toArray();
         }
 
         $arr['pictures'] = $arrPic;
+
+        MongoHelper::setCreatedAt($arr);
+        MongoHelper::setUpdatedAt($arr);
+
         $this->getBranchesCollection()->insert($arr);
         return $arr;
     }
 
     public function editBranches ($id, $params, Context $ctx) {
-        $allowed = ['branchName', 'branchTel', 'branchEmail', 'branchFax', 'branchAddress','location','pictures' ];
+        $allowed = ['branchName', 'branchTel', 'branchEmail', 'branchFax', 'branchAddress','location' ];
         $set = ArrayHelper::filterKey($allowed, $params);
-        $entity = $this->get($ctx);
+        if(isset($set['location'])){
+            $set['location'] = ArrayHelper::filterKey(['lat', 'lng'], $set['location']);;
+        }
+        $entity = $this->getBranch($id, $ctx);
         if(count($set)==0){
             return $entity;
         }
-        $set = ArrayHelper::ArrayGetPath($set);
-        $this->getBranchesCollection()->update(['_id'=> $entity['_id']], ['$set'=> $set]);
-        return $this->get($ctx);
+        MongoHelper::setUpdatedAt($set);
+        $this->getBranchesCollection()->update(['_id'=> $entity['_id']], ['$set'=> ArrayHelper::ArrayGetPath($set)]);
+        return $this->getBranch($id, $ctx);
     }
 
     public function deleteBranche ($id, Context $ctx) {
@@ -251,5 +263,119 @@ class ContactService extends BaseService {
         }
 
         return $item;
+    }
+
+    // pictures
+
+    public function getBranchPictures($id, $params, Context $ctx){
+        $id = MongoHelper::mongoId($id);
+        if($this->getBranchesCollection()->count(['_id'=> $id]) == 0){
+            return ResponseHelper::notFound();
+        }
+
+//        $this->collection->update(['_id'=> $id], ['$setOnInsert'=> ['history'=> []]], ['upsert'=> true]);
+
+        $default = ["page"=> 1, "limit"=> 15];
+        $options = array_merge($default, $params);
+        $arg = $this->getBranchesCollection()->aggregate([
+            ['$match'=> ['_id'=> $id]],
+            ['$project'=> ['pictures'=> 1]],
+            ['$unwind'=> '$pictures'],
+            ['$group'=> ['_id'=> null, 'total'=> ['$sum'=> 1]]]
+        ]);
+
+        $total = (int)@$arg['result'][0]['total'];
+        $limit = (int)$options['limit'];
+        $page = (int)$options['page'];
+
+//        $slice = MongoHelper::createSlice($page, $limit, $total);
+        $slice = [($page-1)*$page, $limit];
+
+        if($slice[1] == 0){
+            $data = [];
+        }
+        else {
+            $entity = $this->getBranchesCollection()->findOne(['_id'=> $id], ['pictures'=> ['$slice'=> $slice]]);
+            $data = Image::loads($entity['pictures'])->toArrayResponse();
+        }
+
+        // reverse data
+        // $data = array_reverse($data);
+
+        $res = array(
+            'length'=> count($data),
+            'total'=> $total,
+            'data'=> $data,
+            'paging'=> array(
+                'page'=> (int)$options['page'],
+                'limit'=> (int)$options['limit']
+            )
+        );
+
+        $pagingLength = $total/(int)$options['limit'];
+        $pagingLength = floor($pagingLength)==$pagingLength? floor($pagingLength): floor($pagingLength) + 1;
+        $res['paging']['length'] = $pagingLength;
+        $res['paging']['current'] = (int)$options['page'];
+        if(((int)$options['page'] * (int)$options['limit']) < $total){
+            $nextQueryString = http_build_query(['page'=> (int)$options['page']+1, 'limit'=> (int)$options['limit']]);
+            $res['paging']['next'] = URL::absolute('/contact/branches/'.MongoHelper::standardId($id).'/picture?'.$nextQueryString);
+        }
+
+        return $res;
+    }
+
+    public function addBranchPictures($id, $params, Context $ctx){
+        $id = MongoHelper::mongoId($id);
+        $v = new Validator($params);
+        $v->rule('required', ['pictures']);
+        if(!$v->validate()){
+            return ResponseHelper::validateError($v->errors());
+        }
+
+        if($this->getBranchesCollection()->count(['_id'=> $id]) == 0){
+            return ResponseHelper::notFound();
+        }
+
+        $res = [];
+        foreach($params['pictures'] as $value){
+            $img = Image::upload($value);
+            $this->getBranchesCollection()->update(['_id'=> $id], ['$push'=> ['pictures'=> $img->toArray()]]);
+            $res[] = $img->toArrayResponse();
+        }
+
+        return $res;
+    }
+
+    public function deleteBranchPictures($id, $params, Context $ctx){
+        $id = MongoHelper::mongoId($id);
+        $v = new Validator($params);
+        $v->rule('required', ['id']);
+        if(!$v->validate()){
+            return ResponseHelper::validateError($v->errors());
+        }
+
+        if($this->getBranchesCollection()->count(['_id'=> $id]) == 0){
+            return ResponseHelper::notFound();
+        }
+
+        $res = [];
+        foreach($params['id'] as $value){
+            $arg = $this->getBranchesCollection()->aggregate([
+                ['$match'=> ['_id'=> $id, 'type'=> 'item']],
+                ['$project'=> ['pictures'=> 1]],
+                ['$unwind'=> '$pictures'],
+                ['$group'=> ['_id'=> null, 'total'=> ['$sum'=> 1]]]
+            ]);
+
+            $total = (int)@$arg['result'][0]['total'];
+            if($total==1){
+                break;
+            }
+
+            $this->getBranchesCollection()->update(['_id'=> $id], ['$pull'=> ['pictures'=> ['id'=> $value]]]);
+            $res[] = $value;
+        }
+
+        return $res;
     }
 }

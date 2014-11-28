@@ -52,4 +52,11 @@ class NodeHelper {
             'children'=> URL::absolute('/service/'.$id.'/children')
         ];
     }
+
+    public static function branch($id){
+        $id = MongoHelper::standardId($id);
+        return [
+            'picture'=> URL::absolute('/contact/branches/'.$id.'/picture'),
+        ];
+    }
 }

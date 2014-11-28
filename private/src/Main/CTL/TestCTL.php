@@ -26,7 +26,7 @@ class TestCTL extends BaseCTL {
         $tokens = array(
             "0294875d882cbdc65e8a5e2062897e565a9c5c6fc9db9cd40d1bb5ec318ffd06",
 //            "yyqCreAwHvgEJzrhDjycaoEJidzveqgciFucClqBBnuIfGdfsBbBnojmdklhcux",
-            "26fea0c78d7eb91817bfdafe91c59f2144a31ee7ce5e4c53eb62a9675db3c05d"
+//            "26fea0c78d7eb91817bfdafe91c59f2144a31ee7ce5e4c53eb62a9675db3c05d"
         );
 
         foreach($tokens as $key=> $token){

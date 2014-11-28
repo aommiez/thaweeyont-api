@@ -31,7 +31,7 @@ class FeedService extends BaseService {
 
     public function add($params, Context $ctx){
         $v = new Validator($params);
-        $v->rule('required', ['thumb']);
+        $v->rule('required', ['name', 'detail','thumb']);
 
         if(!$v->validate()){
             throw new ServiceException(ResponseHelper::validateError($v->errors()));
@@ -62,8 +62,9 @@ class FeedService extends BaseService {
         $set = ArrayHelper::filterKey(['name', 'detail','thumb'], $params);
 
         if(isset($set['thumb'])){
-            $set['thumb'] = Image::upload($set['thumb']);
+            $set['thumb'] = Image::upload($set['thumb'])->toArray();
         }
+        MongoHelper::setUpdatedAt($set);
 
         // update
         $this->getCollection()->update(['_id'=> $id], ['$set'=> $set]);
@@ -106,7 +107,7 @@ class FeedService extends BaseService {
             ->find($condition)
             ->limit($options['limit'])
             ->skip($skip)
-            ->sort(array('seq'=> -1));
+            ->sort(array('created_at'=> -1));
 
         $total = $this->getCollection()->count($condition);
         $length = $cursor->count(true);

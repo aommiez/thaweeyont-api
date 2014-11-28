@@ -10,6 +10,7 @@ namespace Main\CTL;
 use Main\DataModel\Image;
 use Main\Exception\Service\ServiceException;
 use Main\Helper\MongoHelper;
+use Main\Helper\NodeHelper;
 use Main\Service\ContactCommentService;
 use Main\Service\ContactService;
 
@@ -23,18 +24,28 @@ class ContactCTL extends BaseCTL {
      * @GET
      */
     public function get(){
-        $item = ContactService::getInstance()->get($this->getCtx());
-        MongoHelper::removeId($item);
-        return $item;
+        try {
+            $item = ContactService::getInstance()->get($this->getCtx());
+            MongoHelper::removeId($item);
+            return $item;
+        }
+        catch (ServiceException $e) {
+            return $e->getResponse();
+        }
     }
 
     /**
      * @PUT
      */
     public function edit(){
-        $item = ContactService::getInstance()->edit($this->reqInfo->inputs(), $this->getCtx());
-        MongoHelper::removeId($item);
-        return $item;
+        try {
+            $item = ContactService::getInstance()->edit($this->reqInfo->inputs(), $this->getCtx());
+            MongoHelper::removeId($item);
+            return $item;
+        }
+        catch (ServiceException $e) {
+            return $e->getResponse();
+        }
     }
 
     /**
@@ -42,9 +53,40 @@ class ContactCTL extends BaseCTL {
      * @uri /branches
      */
     public function getBranches () {
-        $item = ContactService::getInstance()->getBranches($this->getCtx());
-        MongoHelper::removeId($item);
-        return $item;
+        try {
+            $items = ContactService::getInstance()->getBranches($this->reqInfo->params(), $this->getCtx());
+            foreach($items['data'] as $key => $item){
+                MongoHelper::standardIdEntity($item);
+                $item['pictures'] = Image::loads($item['pictures'])->toArrayResponse();
+                $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
+                $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
+                $item['node'] = NodeHelper::branch($item['id']);
+                $items['data'][$key] = $item;
+            }
+            return $items;
+        }
+        catch (ServiceException $e) {
+            return $e->getResponse();
+        }
+    }
+
+    /**
+     * @GET
+     * @uri /branches/[h:id]
+     */
+    public function getBranch () {
+        try {
+            $item = ContactService::getInstance()->getBranch($this->reqInfo->urlParam('id'), $this->getCtx());
+            MongoHelper::standardIdEntity($item);
+            $item['pictures'] = Image::loads($item['pictures'])->toArrayResponse();
+            $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
+            $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
+            $item['node'] = NodeHelper::branch($item['id']);
+            return $item;
+        }
+        catch (ServiceException $e) {
+            return $e->getResponse();
+        }
     }
 
     /**
@@ -53,7 +95,12 @@ class ContactCTL extends BaseCTL {
      */
     public function getBranchByCoordinate () {
         try {
-            $item = ContactService::getInstance()->getBranchByLocation($this->reqInfo->param('lat'), $this->reqInfo->param('lng'));
+            $item = ContactService::getInstance()->getBranchByLocation($this->reqInfo->param('lat'), $this->reqInfo->param('lng'), $this->getCtx());
+            MongoHelper::standardIdEntity($item);
+            $item['pictures'] = Image::loads($item['pictures'])->toArrayResponse();
+            $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
+            $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
+            $item['node'] = NodeHelper::branch($item['id']);
             MongoHelper::standardIdEntity($item);
         }
         catch (ServiceException $ex) {
@@ -68,19 +115,36 @@ class ContactCTL extends BaseCTL {
      */
 
     public function addBranches () {
-        $item = ContactService::getInstance()->addBranches($this->reqInfo->params(), $this->getCtx());
-        MongoHelper::removeId($item);
-        return $item;
+        try {
+            $item = ContactService::getInstance()->addBranches($this->reqInfo->params(), $this->getCtx());
+            MongoHelper::standardIdEntity($item);
+            $item['pictures'] = Image::loads($item['pictures'])->toArrayResponse();
+            $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
+            $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
+            $item['node'] = NodeHelper::branch($item['id']);
+            return $item;
+        }
+        catch (ServiceException $e) {
+            return $e->getResponse();
+        }
     }
 
     /**
-     * @POST
-     * @uri /branches
+     * @PUT
+     * @uri /branches/[h:id]
      */
     public function editBranches () {
-        $item = ContactService::getInstance()->editBranches($this->reqInfo->urlParam('id'), $this->reqInfo->params(), $this->getCtx());
-        MongoHelper::removeId($item);
-        return $item;
+        try {
+            $item = ContactService::getInstance()->editBranches($this->reqInfo->urlParam('id'), $this->reqInfo->params(), $this->getCtx());
+            MongoHelper::standardIdEntity($item);
+            $item['pictures'] = Image::loads($item['pictures'])->toArrayResponse();
+            $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
+            $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
+            return $item;
+        }
+        catch (ServiceException $e) {
+            return $e->getResponse();
+        }
     }
 
     /**
@@ -88,10 +152,38 @@ class ContactCTL extends BaseCTL {
      * @uri /branches/[h:id]
      */
     public function deleteBranche(){
-        $item = ContactService::getInstance()->deleteBranche($this->reqInfo->urlParam("id"),$this->getCtx());
-        MongoHelper::removeId($item);
-        return $item;
+        try {
+            return ContactService::getInstance()->deleteBranche($this->reqInfo->urlParam("id"), $this->getCtx());
+        }
+        catch (ServiceException $e) {
+            return $e->getResponse();
+        }
     }
+
+    /**
+     * @GET
+     * @uri /branches/[h:id]/picture
+     */
+    public function getBranchPicture(){
+        return ContactService::getInstance()->getBranchPictures($this->reqInfo->urlParam('id'), $this->reqInfo->params(), $this->getCtx());
+    }
+
+    /**
+     * @POST
+     * @uri /branches/[h:id]/picture
+     */
+    public function postBranchPicture(){
+        return ContactService::getInstance()->addBranchPictures($this->reqInfo->urlParam('id'), $this->reqInfo->params(), $this->getCtx());
+    }
+
+    /**
+     * @DELETE
+     * @uri /branches/[h:id]/picture
+     */
+    public function deleteBranchPicture(){
+        return ContactService::getInstance()->deleteBranchPictures($this->reqInfo->urlParam('id'), $this->reqInfo->params(), $this->getCtx());
+    }
+
 
     /**
      * @POST
@@ -116,9 +208,14 @@ class ContactCTL extends BaseCTL {
      * @uri /comment
      */
     public function getComment(){
-        $item = ContactCommentService::getInstance()->gets($this->reqInfo->params(),$this->getCtx());
-        MongoHelper::removeId($item);
-        return $item;
+        try {
+            $item = ContactCommentService::getInstance()->gets($this->reqInfo->params(), $this->getCtx());
+            MongoHelper::removeId($item);
+            return $item;
+        }
+        catch (ServiceException $e) {
+            return $e->getResponse();
+        }
     }
 
 
@@ -127,9 +224,14 @@ class ContactCTL extends BaseCTL {
      * @uri /comment/[h:id]
      */
     public function getCommentById(){
-        $item = ContactCommentService::getInstance()->getCommentById($this->reqInfo->urlParam("id"),$this->getCtx());
-        MongoHelper::removeId($item);
-        return $item;
+        try {
+            $item = ContactCommentService::getInstance()->getCommentById($this->reqInfo->urlParam("id"), $this->getCtx());
+            MongoHelper::removeId($item);
+            return $item;
+        }
+        catch (ServiceException $e) {
+            return $e->getResponse();
+        }
     }
 
 
@@ -138,9 +240,14 @@ class ContactCTL extends BaseCTL {
      * @uri /comment/[h:id]
      */
     public function deleteCommentById(){
-        $item = ContactService::getInstance()->deleteCommentById($this->reqInfo->urlParam("id"),$this->getCtx());
-        MongoHelper::removeId($item);
-        return $item;
+        try {
+            $item = ContactService::getInstance()->deleteCommentById($this->reqInfo->urlParam("id"), $this->getCtx());
+            MongoHelper::removeId($item);
+            return $item;
+        }
+        catch (ServiceException $e) {
+            return $e->getResponse();
+        }
     }
 
     /**
@@ -148,16 +255,21 @@ class ContactCTL extends BaseCTL {
      * @uri /branches/[h:id]/tel
      */
     public function getTels(){
-        $res = ContactService::getInstance()->getTels($this->reqInfo->urlParam("id"), $this->reqInfo->params(), $this->getCtx());
-        foreach($res['data'] as $key=> $item){
-            MongoHelper::standardIdEntity($item);
-            $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
-            $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
-            $item['branch_id'] = MongoHelper::standardId($item['branch_id']);
+        try {
+            $res = ContactService::getInstance()->getTels($this->reqInfo->urlParam("id"), $this->reqInfo->params(), $this->getCtx());
+            foreach ($res['data'] as $key => $item) {
+                MongoHelper::standardIdEntity($item);
+                $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
+                $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
+                $item['branch_id'] = MongoHelper::standardId($item['branch_id']);
 
-            $res['data'][$key] = $item;
+                $res['data'][$key] = $item;
+            }
+            return $res;
         }
-        return $res;
+        catch (ServiceException $e) {
+            return $e->getResponse();
+        }
     }
 
     /**

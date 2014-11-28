@@ -27,15 +27,13 @@ class ServiceService extends BaseService {
 
     public function addItem($params, Context $ctx){
         $v = new Validator($params);
-        $v->rule('required', ['name', 'detail', 'pictures','price']);
+        $v->rule('required', ['name', 'detail', 'price', 'cus_only', 'price_cus_only', 'pictures']);
 
         if(!$v->validate()){
             throw new ServiceException(ResponseHelper::validateError($v->errors()));
         }
 
         $insert = ArrayHelper::filterKey(['price', 'name', 'detail'], $params);
-
-
 
         if(isset($params['parent_id'])){
             if($this->getCollection()->count(['_id'=> MongoHelper::mongoId($params['parent_id']), 'type'=> 'folder']) == 0){
@@ -77,6 +75,41 @@ class ServiceService extends BaseService {
         return $this->get($insert['_id'], $ctx);
     }
 
+    public function editItem($id, $params, Context $ctx){
+        $id = MongoHelper::mongoId($id);
+
+        $set = ArrayHelper::filterKey(['name', 'detail', 'price', 'cus_only', 'price_cus_only', 'parent_id'], $params);
+
+        if(isset($set['cus_only'])){
+            $set['cus_only'] = (bool)@$set['cus_only'];
+        }
+        if(isset($set['price_cus_only'])){
+            $set['price_cus_only'] = (bool)@$set['price_cus_only'];
+        }
+        if(isset($set['price'])){
+            $set['price'] = (int)$set['price'];
+        }
+        if(isset($set['parent_id'])){
+            if($this->getCollection()->count(['_id'=> MongoHelper::mongoId($set['parent_id']), 'type'=> 'folder']) == 0){
+                throw new ServiceException(ResponseHelper::error('Not found parent_id'));
+            }
+            $set['parent_id'] = new \MongoId($set['parent_id']);
+        }
+        else {
+            $set['parent_id'] = null;
+        }
+
+        MongoHelper::setUpdatedAt($set);
+
+        // update
+        $this->getCollection()->update(['_id'=> $id], ['$set'=> $set]);
+
+        // feed update timestamp (last_update)
+        UpdatedTimeHelper::update('service', time());
+
+        return $this->get($id, $ctx);
+    }
+
     public function addFolder($params, Context $ctx){
         $v = new Validator($params);
         $v->rule('required', ['name', 'thumb']);
@@ -115,6 +148,36 @@ class ServiceService extends BaseService {
         UpdatedTimeHelper::update('service', time());
 
         return $this->get($insert['_id'], $ctx);
+    }
+
+    public function editFolder($id, $params, Context $ctx){
+        $id = MongoHelper::mongoId($id);
+
+        $set = ArrayHelper::filterKey(['name', 'thumb', 'parent_id'], $params);
+
+        if(isset($set['parent_id'])){
+            if($this->getCollection()->count(['_id'=> MongoHelper::mongoId($set['parent_id']), 'type'=> 'folder']) == 0){
+                throw new ServiceException(ResponseHelper::error('Not found parent_id'));
+            }
+            $set['parent_id'] = new \MongoId($set['parent_id']);
+        }
+        else {
+            $set['parent_id'] = null;
+        }
+
+        if(isset($set['thumb'])){
+            $set['thumb'] = Image::upload($set['thumb'])->toArray();
+        }
+
+        MongoHelper::setUpdatedAt($set);
+
+        // update
+        $this->getCollection()->update(['_id'=> $id], ['$set'=> $set]);
+
+        // feed update timestamp (last_update)
+        UpdatedTimeHelper::update('service', time());
+
+        return $this->get($id, $ctx);
     }
 
     public function gets($options = array(), Context $ctx){
@@ -298,5 +361,16 @@ class ServiceService extends BaseService {
         }
 
         return $res;
+    }
+
+    public function delete($id, Context $ctx){
+        $id = MongoHelper::mongoId($id);
+
+        $this->getCollection()->remove(array("_id"=> $id));
+
+        // feed update timestamp (last_update)
+        UpdatedTimeHelper::update('service', time());
+
+        return array("success"=> true);
     }
 }

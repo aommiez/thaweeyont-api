@@ -20,7 +20,6 @@ use Main\Helper\UserHelper;
 use Valitron\Validator;
 
 class UserService extends BaseService {
-
     protected $fields = ["type", "display_name", "username", "email", "password", "gender", "birth_date", "picture", "mobile", "website", "fb_id", "fb_name"];
 
     public function getCollection(){
@@ -66,6 +65,7 @@ class UserService extends BaseService {
 
         $entity['fb_id'] = '';
         $entity['fb_name'] = '';
+        $entity['display_notification_number'] = 0;
 
         // set default setting
         $entity['setting'] = UserHelper::defaultSetting();

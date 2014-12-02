@@ -7,6 +7,7 @@
  */
 
 namespace Main\CTL;
+use Main\Exception\Service\ServiceException;
 use Main\Service\UserNotifyService;
 
 
@@ -19,7 +20,11 @@ class UserNotifyCTL extends BaseCTL {
      * @GET
      */
     public function gets(){
-        return UserNotifyService::getInstance()->gets($this->reqInfo->params(), $this->getCtx());
+        try {
+            return UserNotifyService::getInstance()->gets($this->reqInfo->params(), $this->getCtx());
+        } catch (ServiceException $e) {
+            return $e->getResponse();
+        }
     }
 
     /**
@@ -28,7 +33,11 @@ class UserNotifyCTL extends BaseCTL {
      * @uri /read/[h:id]
      */
     public function read(){
-        return UserNotifyService::getInstance()->read($this->reqInfo->urlParam('id'), $this->getCtx());
+        try {
+            return UserNotifyService::getInstance()->read($this->reqInfo->urlParam('id'), $this->getCtx());
+        } catch (ServiceException $e) {
+            return $e->getResponse();
+        }
     }
 
     /**
@@ -36,6 +45,22 @@ class UserNotifyCTL extends BaseCTL {
      * @uri /unopened
      */
     public function unopened(){
-        return UserNotifyService::getInstance()->unopened($this->getCtx());
+        try {
+            return UserNotifyService::getInstance()->unopened($this->getCtx());
+        } catch (ServiceException $e) {
+            return $e->getResponse();
+        }
+    }
+
+    /**
+     * @GET
+     * @uri /clear_badge
+     */
+    public function clearBadge(){
+        try {
+            return UserNotifyService::getInstance()->clearDisplayNotificationNumber($this->getCtx());
+        } catch (ServiceException $e) {
+            return $e->getResponse();
+        }
     }
 }

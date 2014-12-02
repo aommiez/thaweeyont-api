@@ -27,6 +27,7 @@ class FeedCTL extends BaseCTL {
         try {
             $items = FeedService::getInstance()->gets($this->reqInfo->params(), $this->getCtx());
             foreach ($items['data'] as $key => $item) {
+                MongoHelper::standardIdEntity($item);
                 $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
                 $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
                 $item['node'] = NodeHelper::news($item['id']);
@@ -45,6 +46,7 @@ class FeedCTL extends BaseCTL {
     public function add(){
         try {
             $item = FeedService::getInstance()->add($this->reqInfo->params(), $this->getCtx());
+            MongoHelper::standardIdEntity($item);
             $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
             $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
             $item['node'] = NodeHelper::news($item['id']);
@@ -62,6 +64,7 @@ class FeedCTL extends BaseCTL {
     public function get(){
         try {
             $item = FeedService::getInstance()->get($this->reqInfo->urlParam('id'), $this->getCtx());
+            MongoHelper::standardIdEntity($item);
             $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
             $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
             $item['node'] = NodeHelper::news($item['id']);
@@ -79,6 +82,7 @@ class FeedCTL extends BaseCTL {
     public function edit(){
         try {
             $item = FeedService::getInstance()->edit($this->reqInfo->urlParam('id'), $this->reqInfo->params(), $this->getCtx());
+            MongoHelper::standardIdEntity($item);
             $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
             $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
             $item['node'] = NodeHelper::news($item['id']);

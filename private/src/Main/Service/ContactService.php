@@ -245,6 +245,18 @@ class ContactService extends BaseService {
         return $item;
     }
 
+    public function editTel ($id, $params, Context $ctx) {
+        $allowed = ['name', 'tel'];
+        $set = ArrayHelper::filterKey($allowed, $params);
+        $entity = $this->getTel($id, $ctx);
+        if(count($set)==0){
+            return $entity;
+        }
+        MongoHelper::setUpdatedAt($set);
+        $this->getTelBranchesCollection()->update(['_id'=> $entity['_id']], ['$set'=> ArrayHelper::ArrayGetPath($set)]);
+        return $this->getTel($id, $ctx);
+    }
+
     public function removeTel($id, Context $ctx){
         $item = $this->getTel($id, $ctx);
         $condition = ['_id'=> MongoHelper::mongoId($id)];

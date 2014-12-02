@@ -34,8 +34,8 @@ class NotifyHelper {
             $pushMessage = $message;
         }
 
-        if(strlen(utf8_encode($pushMessage)) > 120){
-            $pushMessage = mb_substr($pushMessage, 0, 18, 'utf-8').'...';
+        if(strlen(utf8_encode($pushMessage)) > 84){
+            $pushMessage = mb_substr($pushMessage, 0, 14, 'utf-8').'...';
         }
 
         return $pushMessage;
@@ -43,32 +43,23 @@ class NotifyHelper {
 
     public static function sendAll($objectId, $type, $header, $message){
         $db = DB::getDB();
-        $users = $db->users->find([], ['setting', 'ios_device_token', 'android_token']);
+        $users = $db->users->find([], ['setting', 'ios_device_token', 'android_token', 'display_notification_number']);
         foreach($users as $item){
             $userId = MongoHelper::mongoId($item['_id']);
             $entity = self::create($objectId, $type, $header, $message, $userId);
 
+            // inc
+            self::incBadge($item['_id']);
+            $item['display_notification_number']++;
+
             $entity['object']['id'] = MongoHelper::standardId($objectId);
             $entity['id'] = MongoHelper::standardId($entity['_id']);
 
-//            $objectUrl = "";
-//            if($type == 'news'){
-//                $objectUrl = URL::absolute('/news/'.$entity['object']['id']);
-//            }
-//            else if($type == 'activity'){
-//                $objectUrl = URL::absolute('/activity/'.$entity['object']['id']);
-//            }
-//            else if($type == 'message'){
-//                $objectUrl = URL::absolute('/message/'.$entity['object']['id']);
-//            }
-
-            $pushMessage = self::cutMessage($message);
-
-            $args = array(
+            $args = [
                 'id'=> $entity['id'],
                 'object_id'=> $entity['object']['id'],
                 'type'=> $type
-            );
+            ];
 
             if(!isset($item['setting']))
                 continue;
@@ -79,38 +70,42 @@ class NotifyHelper {
             if(!$item['setting']['notify_message'] && $type == "message")
                 continue;
 
-            $res = null;
-            if(isset($item['ios_device_token'])){
-                foreach($item['ios_device_token'] as $token){
-                    try {
-                        if($token['type'] == "dev"){
-                            self::getApnHelperDev()->send($token['key'], $pushMessage, $args);
-                        }
-                        else if($token['type'] == "product"){
-                            self::getApnHelperProduct()->send($token['key'], $pushMessage, $args);
-                        }
+            self::send($item, $message, $args);
+        }
+    }
+
+    public static function send($user, $message, $args){
+        $pushMessage = self::cutMessage($message);
+        if(isset($user['ios_device_token'])){
+            foreach($user['ios_device_token'] as $token){
+                try {
+                    if($token['type'] == "dev"){
+                        self::getApnHelperDev()->send($token['key'], $pushMessage, $args, $user['display_notification_number']);
                     }
-                    catch (\Exception $e){
-                        error_log($e->getCode()." ".$e->getMessage()." *FILE:".$e->getFile()." ".$e->getLine());
+                    else if($token['type'] == "product"){
+                        self::getApnHelperProduct()->send($token['key'], $pushMessage, $args, $user['display_notification_number']);
                     }
                 }
+                catch (\Exception $e){
+                    error_log($e->getCode()." ".$e->getMessage()." *FILE:".$e->getFile()." ".$e->getLine());
+                }
             }
-            if(isset($item['android_token'])){
-                if(count($item['android_token']) > 0){
-                    $tokens = [];
-                    foreach($item['android_token'] as $token){
-                        $tokens[] = $token;
-                    }
+        }
+        if(isset($user['android_token'])){
+            if(count($user['android_token']) > 0){
+                $tokens = [];
+                foreach($user['android_token'] as $token){
+                    $tokens[] = $token;
+                }
 
-                    try {
-                        GCMHerlper::send($tokens, [
-                            'message'=> $pushMessage,
-                            'object'=> $args
-                        ]);
-                    }
-                    catch(\Exception $e){
-                        error_log($e->getMessage());
-                    }
+                try {
+                    GCMHerlper::send($tokens, [
+                        'message'=> $pushMessage,
+                        'object'=> $args
+                    ]);
+                }
+                catch(\Exception $e){
+                    error_log($e->getMessage());
                 }
             }
         }
@@ -136,5 +131,55 @@ class NotifyHelper {
 
         $db->notify->insert($entity);
         return $entity;
+    }
+
+    public static function clearBadge($user){
+        try {
+            if(isset($user['ios_device_token'])){
+                foreach($user['ios_device_token'] as $token){
+                    try {
+                        if($token['type'] == "dev"){
+                            self::getApnHelperDev()->sendClearBadge($token['key']);
+                        }
+                        else if($token['type'] == "product"){
+                            self::getApnHelperProduct()->sendClearBadge($token['key']);
+                        }
+                    }
+                    catch (\Exception $e){
+                        error_log($e->getCode()." ".$e->getMessage()." *FILE:".$e->getFile()." ".$e->getLine());
+                    }
+                }
+            }
+        }
+        catch (\Exception $e){
+            error_log($e->getMessage());
+        }
+    }
+
+    public static function sendBadge($user, $badge){
+        try {
+            if(isset($user['ios_device_token'])){
+                foreach($user['ios_device_token'] as $token){
+                    try {
+                        if($token['type'] == "dev"){
+                            self::getApnHelperDev()->sendBadge($token['key'], $badge);
+                        }
+                        else if($token['type'] == "product"){
+                            self::getApnHelperProduct()->sendBadge($token['key'], $badge);
+                        }
+                    }
+                    catch (\Exception $e){
+                        error_log($e->getCode()." ".$e->getMessage()." *FILE:".$e->getFile()." ".$e->getLine());
+                    }
+                }
+            }
+        }
+        catch (\Exception $e){
+            error_log($e->getMessage());
+        }
+    }
+
+    public static function incBadge($userId){
+        DB::getDB()->users->update(['_id'=> MongoHelper::mongoId($userId)], ['$inc'=> ['display_notification_number'=> 1]]);
     }
 }

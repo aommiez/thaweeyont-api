@@ -291,6 +291,24 @@ class ContactCTL extends BaseCTL {
     }
 
     /**
+     * @PUT
+     * @uri /branches/tel/[h:id]
+     */
+    public function editTel(){
+        try {
+            $item = ContactService::getInstance()->editTel($this->reqInfo->urlParam("id"), $this->reqInfo->params(), $this->getCtx());
+            MongoHelper::standardIdEntity($item);
+            $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
+            $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
+            $item['branch_id'] = MongoHelper::standardId($item['branch_id']);
+            return $item;
+        }
+        catch (ServiceException $ex){
+            return $ex->getResponse();
+        }
+    }
+
+    /**
      * @GET
      * @uri /branches/tel/[h:id]
      */

@@ -30,7 +30,7 @@ class OAuthService extends BaseService {
     public function facebook($params, Context $ctx){
         file_put_contents('test.txt', print_r($params, true));
 
-        FacebookSession::setDefaultApplication('717935634950887','b43f5c57b6af38948dbb3a6a4ce47eae');
+        FacebookSession::setDefaultApplication('717935634950887', 'b43f5c57b6af38948dbb3a6a4ce47eae');
 
         $v = new Validator($params);
         $v->rule('required', ['facebook_token']);
@@ -66,7 +66,8 @@ class OAuthService extends BaseService {
                     'mobile'=> '',
                     'created_at'=> $now,
                     'updated_at'=> $now,
-                    'setting'=> UserHelper::defaultSetting()
+                    'setting'=> UserHelper::defaultSetting(),
+                    'display_notification_number' => 0
                 ];
                 $item['access_token'] = $this->generateToken(MongoHelper::standardId($item['_id']));
 //                $item['app_id'] = $ctx->getAppId();
@@ -90,7 +91,19 @@ class OAuthService extends BaseService {
 
             // remember device token
             if(isset($params['ios_device_token'])){
-                if(isset($params['ios_device_token']['type']) && isset($params['ios_device_token']['key'])){
+                // 
+                file_put_contents('test.txt', $params['ios_device_token']);
+
+                $hasToken = false;
+                if(isset($item['ios_device_token']) && is_array($item['ios_device_token'])){
+                    foreach($item['ios_device_token'] as $key=> $value){
+                        if($value['type'] == $params['ios_device_token']['type']
+                            && $value['key'] == $params['ios_device_token']['key']){
+                            $hasToken = true;
+                        }
+                    }
+                }
+                if(!$hasToken){
                     $this->getUsersCollection()->update(['_id'=> $item['_id']], ['$addToSet'=> ['ios_device_token'=> $params['ios_device_token'] ]]);
                 }
             }
@@ -129,7 +142,9 @@ class OAuthService extends BaseService {
 
         // remember device token
         if(isset($params['ios_device_token'])){
-            $this->getUsersCollection()->update(['_id'=> $item['_id']], ['$addToSet'=> ['ios_device_token'=> $params['ios_device_token'] ]]);
+            if(isset($params['ios_device_token']['type']) && isset($params['ios_device_token']['key'])){
+                $this->getUsersCollection()->update(['_id'=> $item['_id']], ['$addToSet'=> ['ios_device_token'=> $params['ios_device_token'] ]]);
+            }
         }
         if(isset($params['android_token'])){
             $this->getUsersCollection()->update(['_id'=> $item['_id']], ['$addToSet'=> ['android_token'=> $params['android_token'] ]]);

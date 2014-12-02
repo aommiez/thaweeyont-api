@@ -11,13 +11,19 @@ namespace Main\Service;
 
 use Main\Context\Context;
 use Main\DB;
+use Main\Exception\Service\ServiceException;
 use Main\Helper\MongoHelper;
+use Main\Helper\NotifyHelper;
 use Main\Helper\ResponseHelper;
 use Main\Helper\URL;
 
 class UserNotifyService extends BaseService {
     public function getCollection(){
         return DB::getDB()->notify;
+    }
+
+    public function getUserCollection(){
+        return DB::getDB()->users;
     }
 
     public function gets($options, Context $ctx){
@@ -83,11 +89,8 @@ class UserNotifyService extends BaseService {
         if(is_null($user)){
             return ResponseHelper::requireAuthorize();
         }
-        $userId = MongoHelper::mongoId($user['_id']);
 
-        $count = $this->getCollection()->count(['user_id'=> $userId, 'opened'=> false]);
-
-        return ['length'=> $count];
+        return ['length'=> $user['display_notification_number']];
     }
 
     public function read($id, Context $ctx){
@@ -95,5 +98,18 @@ class UserNotifyService extends BaseService {
         $this->getCollection()->update(['_id'=> $id], ['$set'=> ['opened'=> true]]);
 
         return ['success'=> true];
+    }
+
+    public function clearDisplayNotificationNumber(Context $ctx){
+        $user = $ctx->getUser();
+        if(is_null($user)){
+            throw new ServiceException(ResponseHelper::notAuthorize());
+        }
+
+        $this->getUserCollection()->update(['_id'=> $user['_id']], ['$set'=> ['display_notification_number'=> 0]]);
+        NotifyHelper::clearBadge($user);
+        $user['display_notification_number'] = 0;
+
+        return $user;
     }
 }

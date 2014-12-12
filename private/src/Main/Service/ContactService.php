@@ -59,7 +59,7 @@ class ContactService extends BaseService {
             ->find($condition)
             ->limit($options['limit'])
             ->skip($skip)
-            ->sort(array('created_at'=> -1));
+            ->sort(array('seq'=> -1));
 
         $total = $this->getBranchesCollection()->count($condition);
         $length = $cursor->count(true);
@@ -133,6 +133,11 @@ class ContactService extends BaseService {
 
         $arr['pictures'] = $arrPic;
 
+        $agg = $this->getBranchesCollection()->aggregate([
+            ['$group'=> ['_id'=> null, 'max'=> ['$max'=> '$seq']]]
+        ]);
+        $insert['seq'] = (int)@$agg['result'][0]['max'] + 1;
+
         MongoHelper::setCreatedAt($arr);
         MongoHelper::setUpdatedAt($arr);
 
@@ -174,6 +179,11 @@ class ContactService extends BaseService {
         $insert = ArrayHelper::filterKey(['name', 'tel'], $params);
         $insert['branch_id'] = MongoHelper::mongoId($branchId);
 
+        $agg = $this->getTelBranchesCollection()->aggregate([
+            ['$group'=> ['_id'=> null, 'max'=> ['$max'=> '$seq']]]
+        ]);
+        $insert['seq'] = (int)@$agg['result'][0]['max'] + 1;
+
         // set field created_at, updated_at
         MongoHelper::setCreatedAt($insert);
         MongoHelper::setUpdatedAt($insert);
@@ -199,7 +209,7 @@ class ContactService extends BaseService {
             ->find($condition)
             ->limit((int)$options['limit'])
             ->skip((int)$skip)
-            ->sort(['created_at'=> -1]);
+            ->sort(['seq'=> -1]);
 
         $data = [];
 
@@ -389,5 +399,35 @@ class ContactService extends BaseService {
         }
 
         return $res;
+    }
+
+    public function branchesSort($param){
+        $v = new Validator($param);
+        $v->rule('required', ['id', 'offset']);
+        if(!$v->validate()){
+            return ResponseHelper::validateError($v->errors());
+        }
+
+        foreach($param['id'] as $key=> $id){
+            $mongoId = MongoHelper::mongoId($id);
+            $seq = $key+$param['offset'];
+            $this->getBranchesCollection()->update(array('_id'=> $mongoId), array('$set'=> array('seq'=> $seq)));
+        }
+        return array('success'=> true);
+    }
+
+    public function telBranchesSort($param){
+        $v = new Validator($param);
+        $v->rule('required', ['id', 'offset']);
+        if(!$v->validate()){
+            return ResponseHelper::validateError($v->errors());
+        }
+
+        foreach($param['id'] as $key=> $id){
+            $mongoId = MongoHelper::mongoId($id);
+            $seq = $key+$param['offset'];
+            $this->getTelBranchesCollection()->update(array('_id'=> $mongoId), array('$set'=> array('seq'=> $seq)));
+        }
+        return array('success'=> true);
     }
 }

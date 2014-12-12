@@ -58,6 +58,18 @@ class ServiceService extends BaseService {
             $insert['price'] = (int)$insert['price'];
         }
 
+        // seq insert
+        $match = ['parent_id'=> null];
+        if(!is_null($insert['parent_id'])){
+            $match = ['parent_id'=> $insert['parent_id']];
+        }
+        $agg = $this->getCollection()->aggregate([
+            ['$match'=> $match],
+            ['$group'=> ['_id'=> null, 'max'=> ['$max'=> '$seq']]]
+        ]);
+        $insert['seq'] = (int)@$agg['result'][0]['max'] + 1;
+
+        // insert type
         $insert['type'] = 'item';
 
 //        $insert['app_id'] = $ctx->getAppId();
@@ -137,6 +149,18 @@ class ServiceService extends BaseService {
         MongoHelper::setCreatedAt($insert);
         MongoHelper::setUpdatedAt($insert);
 
+        // seq insert
+        $match = ['parent_id'=> null];
+        if(!is_null($insert['parent_id'])){
+            $match = ['parent_id'=> $insert['parent_id']];
+        }
+        $agg = $this->getCollection()->aggregate([
+            ['$match'=> $match],
+            ['$group'=> ['_id'=> null, 'max'=> ['$max'=> '$seq']]]
+        ]);
+        $insert['seq'] = (int)@$agg['result'][0]['max'] + 1;
+
+        // insert type
         $insert['type'] = 'folder';
 
         $this->getCollection()->insert($insert);
@@ -199,7 +223,7 @@ class ServiceService extends BaseService {
             ->find($condition)
             ->limit((int)$options['limit'])
             ->skip((int)$skip)
-            ->sort(['created_at'=> -1]);
+            ->sort(['seq'=> -1]);
 
         $data = [];
         foreach($cursor as $item){
@@ -372,5 +396,20 @@ class ServiceService extends BaseService {
         UpdatedTimeHelper::update('service', time());
 
         return array("success"=> true);
+    }
+
+    public function sort($param){
+        $v = new Validator($param);
+        $v->rule('required', ['id', 'offset']);
+        if(!$v->validate()){
+            return ResponseHelper::validateError($v->errors());
+        }
+
+        foreach($param['id'] as $key=> $id){
+            $mongoId = MongoHelper::mongoId($id);
+            $seq = $key+$param['offset'];
+            $this->getCollection()->update(array('_id'=> $mongoId), array('$set'=> array('seq'=> $seq)));
+        }
+        return array('success'=> true);
     }
 }

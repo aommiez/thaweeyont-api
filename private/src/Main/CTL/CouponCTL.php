@@ -48,7 +48,8 @@ class CouponCTL extends BaseCTL {
                 MongoHelper::standardIdEntity($item);
                 $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
                 $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
-                if($item['type']=="coupon" || true){
+//                if($item['type']=="coupon" || true){
+                if(true){
                     $item['thumb'] = Image::load($item['thumb'])->toArrayResponse();
                     $user = $this->getCtx()->getUser();
                     $item['used_status'] = "none";
@@ -97,7 +98,8 @@ class CouponCTL extends BaseCTL {
             MongoHelper::standardIdEntity($item);
             $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
             $item['updated_at'] = MongoHelper::timeToInt($item['updated_at']);
-            if($item['type']=="coupon" || true){
+//            if($item['type']=="coupon" || true){
+            if(true){
                 $item['thumb'] = Image::load($item['thumb'])->toArrayResponse();
                 $user = $this->getCtx()->getUser();
                 $item['used_status'] = "none";
@@ -182,6 +184,41 @@ class CouponCTL extends BaseCTL {
         }
         catch(ServiceException $ex){
             return $ex->getResponse();
+        }
+    }
+
+    /**
+     * @GET
+     * @uri /[h:id]/used_users
+     */
+    public function usedUsers(){
+        try {
+            $items = CouponService::getInstance()->usedUsers($this->reqInfo->urlParam('id'), $this->reqInfo->params(), $this->getCtx());
+            foreach($items['data'] as $key=> $item){
+                MongoHelper::standardIdEntity($item['user']);
+                $item['created_at'] = MongoHelper::timeToInt($item['created_at']);
+                $item['expire'] = MongoHelper::timeToInt($item['expire']);
+
+                $items['data'][$key] = $item;
+            }
+            return $items;
+        }
+        catch(ServiceException $ex){
+            return $ex->getResponse();
+        }
+    }
+
+    /**
+     * @POST
+     * @uri /sort
+     */
+    public function sort(){
+        try {
+            $res = CouponService::getInstance()->sort($this->reqInfo->params(), $this->getCtx());
+            return $res;
+        }
+        catch (ServiceException $e){
+            return $e->getResponse();
         }
     }
 }

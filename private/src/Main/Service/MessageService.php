@@ -46,10 +46,10 @@ class MessageService extends BaseService {
             $condition = [];
         }
         else if($params['to'] == "facebook"){
-            $condition = ["fb_id"=> ""];
+            $condition = ["fb_id"=> ['$ne'=> ""]];
         }
         else if($params['to'] == "register"){
-            $condition = ["fb_id"=> ['$not'=> ""]];
+            $condition = ["fb_id"=> ""];
         }
 
         $users = $this->getUserCollection()->find($condition);

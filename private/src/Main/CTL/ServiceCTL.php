@@ -294,4 +294,13 @@ class ServiceCTL extends BaseCTL {
             return $ex->getResponse();
         }
     }
+
+    /**
+     * @POST
+     * @uri /sort
+     */
+    public function sort(){
+        $res = ServiceService::getInstance()->sort($this->reqInfo->params(), $this->getCtx());
+        return $res;
+    }
 }

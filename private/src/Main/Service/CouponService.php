@@ -42,6 +42,12 @@ class CouponService extends BaseService {
         $insert = ArrayHelper::filterKey(['name', 'detail', 'condition'], $params);
         $insert['thumb'] = Image::upload($params['thumb'])->toArray();
 
+        // seq insert
+        $agg = $this->getCollection()->aggregate([
+            ['$group'=> ['_id'=> null, 'max'=> ['$max'=> '$seq']]]
+        ]);
+        $insert['seq'] = (int)@$agg['result'][0]['max'] + 1;
+
         MongoHelper::setCreatedAt($insert);
         MongoHelper::setUpdatedAt($insert);
 //        $insert['cus_only'] = (bool)$params['cus_only'];
@@ -175,7 +181,7 @@ class CouponService extends BaseService {
         $used_user = [
             'user'=> ArrayHelper::filterKey(['_id', 'display_name'], $user),
             'expire'=> time() + 3600,
-            'created_time'=> time(),
+            'created_at'=> time(),
             'code'=> $code['_id']
         ];
 
@@ -191,5 +197,55 @@ class CouponService extends BaseService {
         );
 
         return $used_user;
+    }
+
+    public function usedUsers($id, $params, Context $ctx){
+        $default = array(
+            "page"=> 1,
+            "limit"=> 15,
+        );
+        $options = array_merge($default, $params);
+
+        $item = $this->getCollection()->findOne(['_id'=> MongoHelper::mongoId($id)]);
+        if(is_null($item)){
+            throw new ServiceException(ResponseHelper::notFound());
+        }
+
+        $total = count($item['used_users']);
+        $length = count($item['used_users']);
+
+        $res = [
+            'length'=> $length,
+            'total'=> $total,
+            'data'=> $item['used_users'],
+            'paging'=> [
+                'page'=> 1,
+                'limit'=> 1
+            ]
+        ];
+
+        $pagingLength = $total/(int)$options['limit'];
+        $pagingLength = floor($pagingLength)==$pagingLength? floor($pagingLength): floor($pagingLength) + 1;
+        $res['paging']['length'] = $pagingLength;
+        $res['paging']['current'] = (int)$options['page'];
+        if(((int)$options['page'] * (int)$options['limit']) < $total){
+            $nextQueryString = http_build_query(['page'=> (int)$options['page']+1, 'limit'=> (int)$options['limit']]);
+            $res['paging']['next'] = URL::absolute('/coupon/'.MongoHelper::mongoId($id).'/used_users?'.$nextQueryString);
+        }
+
+        return $res;
+    }
+
+    public function sort($param, Context $ctx = null){
+        foreach($param['id'] as $key=> $id){
+            $mongoId = MongoHelper::mongoId($id);
+            $seq = $key+$param['offset'];
+            $this->getCollection()->update(array('_id'=> $mongoId), array('$set'=> array('seq'=> $seq)));
+        }
+
+        // feed update timestamp (last_update)
+        UpdatedTimeHelper::update('feed', time());
+
+        return array('success'=> true);
     }
 }

@@ -177,4 +177,91 @@ class UserService extends BaseService {
 
         return $this->get($tokenEntity['_id'], $ctx);
     }
+
+    public function requestResetCode($params, Context $ctx){
+        $v = new Validator($params);
+        $v->rule('required', ['email']);
+        $v->rule('email', 'email');
+
+        if(!$v->validate()){
+            throw new ServiceException(ResponseHelper::validateError($v->errors()));
+        }
+
+        $user = $this->getCollection()->findOne(['email'=> $params['email']]);
+        if(is_null($user)){
+            throw new ServiceException(ResponseHelper::notFound());
+        }
+
+        $resetPasswordCode = md5(uniqid(MongoHelper::mongoId($user['_id']).'_reset', true));
+        $this->getCollection()->update(['_id'=> $user['_id']], ['$set'=> ['reset_password_code'=> $resetPasswordCode]]);
+
+        $strTo = $user['email'];
+        $strSubject = "Thaweeyont Recovery Password.";
+        $strHeader = "MIME-Version: 1.0' . \r\n";
+        $strHeader .= "Content-type: text/html; charset=utf-8\r\n";
+        $strHeader .= "From: Thaweeyont-service<admin@thaweeyont.com>";
+        $strMessage = "You are code: ".$resetPasswordCode;
+        if(isset($params['callback_url'])){
+            $callback = parse_url($params['callback_url']);
+            $url = 'http://'.$callback['host'].$callback['path'];
+            $query = [];
+            if(isset($callback['query'])){
+                parse_str($callback['query'], $query);
+            }
+            $query['reset_password_code'] = $resetPasswordCode;
+            $callback['query'] = http_build_query($query);
+            $url .= '?'.$callback['query'];
+            $strMessage .= <<<HTML
+            <br />
+or follow link: <a href="{$url}">{$url}</a>
+HTML;
+        }
+
+        $flgSend = @mail($strTo, $strSubject, $strMessage, $strHeader);  // @ = No Show Error //
+//            $flgSend = mail($strTo, $strSubject, $strMessage, $strHeader);  // @ = No Show Error //
+        if(!$flgSend)
+        {
+            throw new ServiceException(ResponseHelper::error('Email not send.'));
+        }
+
+        return [
+            'id'=> MongoHelper::standardId($user['_id']),
+            'email'=> $user['email']
+        ];
+    }
+
+    public function getUserByCode($params, Context $ctx){
+        $v = new Validator($params);
+        $v->rule('required', ['reset_password_code']);
+
+        if(!$v->validate()){
+            throw new ServiceException(ResponseHelper::validateError($v->errors()));
+        }
+
+        $user = $this->getCollection()->findOne(['reset_password_code'=> $params['reset_password_code']], ['username', 'display_name']);
+        if(is_null($user)){
+            throw new ServiceException(ResponseHelper::notFound());
+        }
+
+        return $user;
+    }
+
+    public function setPasswordByCode($params, Context $ctx){
+        $v = new Validator($params);
+        $v->rule('required', ['reset_password_code', 'new_password']);
+
+        if(!$v->validate()){
+            throw new ServiceException(ResponseHelper::validateError($v->errors()));
+        }
+
+        $user = $this->getCollection()->findOne(['reset_password_code'=> $params['reset_password_code']], ['username', 'display_name']);
+        if(is_null($user)){
+            throw new ServiceException(ResponseHelper::notFound());
+        }
+
+        $newPassword = md5($params['new_password']);
+        $this->getCollection()->update(['_id'=> $user['_id']], ['$set'=> ['password'=> $newPassword], '$unset'=> ['reset_password_code'=> '']]);
+
+        return true;
+    }
 }

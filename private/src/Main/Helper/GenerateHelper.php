@@ -13,4 +13,4 @@ class GenerateHelper {
     public static function tokenById($id){
         return md5(uniqid($id, true));
     }
-} 
+}

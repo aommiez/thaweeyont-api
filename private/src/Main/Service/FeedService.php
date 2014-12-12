@@ -41,6 +41,12 @@ class FeedService extends BaseService {
 
         $insert['thumb'] = Image::upload($params['thumb'])->toArray();
 
+        // seq insert
+        $agg = $this->getCollection()->aggregate([
+            ['$group'=> ['_id'=> null, 'max'=> ['$max'=> '$seq']]]
+        ]);
+        $insert['seq'] = (int)@$agg['result'][0]['max'] + 1;
+
         MongoHelper::setCreatedAt($insert);
         MongoHelper::setUpdatedAt($insert);
 
@@ -107,7 +113,7 @@ class FeedService extends BaseService {
             ->find($condition)
             ->limit($options['limit'])
             ->skip($skip)
-            ->sort(array('created_at'=> -1));
+            ->sort(array('seq'=> -1));
 
         $total = $this->getCollection()->count($condition);
         $length = $cursor->count(true);
@@ -150,18 +156,18 @@ class FeedService extends BaseService {
         return $res;
     }
 
-//    public function sort($param, Context $ctx = null){
-//        foreach($param['id'] as $key=> $id){
-//            $mongoId = new \MongoId($id);
-//            $seq = $key+$param['offset'];
-//            $this->getCollection()->update(array('_id'=> $mongoId), array('$set'=> array('seq'=> $seq)));
-//        }
-//
-//        // feed update timestamp (last_update)
-//        UpdatedTimeHelper::update('feed', time());
-//
-//        return array('success'=> true);
-//    }
+    public function sort($param, Context $ctx = null){
+        foreach($param['id'] as $key=> $id){
+            $mongoId = MongoHelper::mongoId($id);
+            $seq = $key+$param['offset'];
+            $this->getCollection()->update(array('_id'=> $mongoId), array('$set'=> array('seq'=> $seq)));
+        }
+
+        // feed update timestamp (last_update)
+        UpdatedTimeHelper::update('feed', time());
+
+        return array('success'=> true);
+    }
 
     public function delete($id, Context $ctx){
         $id = MongoHelper::mongoId($id);

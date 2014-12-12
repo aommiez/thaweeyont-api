@@ -38,6 +38,12 @@ class PromotionService extends BaseService {
         $insert = ArrayHelper::filterKey(['name', 'detail'], $params);
         $insert['thumb'] = Image::upload($params['thumb'])->toArray();
 
+        // seq insert
+        $agg = $this->getCollection()->aggregate([
+            ['$group'=> ['_id'=> null, 'max'=> ['$max'=> '$seq']]]
+        ]);
+        $insert['seq'] = (int)@$agg['result'][0]['max'] + 1;
+
         MongoHelper::setCreatedAt($insert);
         MongoHelper::setUpdatedAt($insert);
 //        $insert['cus_only'] = (bool)$params['cus_only'];
@@ -108,7 +114,7 @@ class PromotionService extends BaseService {
             ->find($condition)
             ->limit((int)$options['limit'])
             ->skip((int)$skip)
-            ->sort(['created_at'=> -1]);
+            ->sort(['seq'=> -1]);
 
         $data = [];
 
@@ -148,5 +154,18 @@ class PromotionService extends BaseService {
     public function delete($id, Context $ctx){
         $condition = ['_id'=> MongoHelper::mongoId($id)];
         return $this->getCollection()->remove($condition);
+    }
+
+    public function sort($param, Context $ctx = null){
+        foreach($param['id'] as $key=> $id){
+            $mongoId = MongoHelper::mongoId($id);
+            $seq = $key+$param['offset'];
+            $this->getCollection()->update(array('_id'=> $mongoId), array('$set'=> array('seq'=> $seq)));
+        }
+
+        // feed update timestamp (last_update)
+        UpdatedTimeHelper::update('feed', time());
+
+        return array('success'=> true);
     }
 }

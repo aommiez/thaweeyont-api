@@ -48,11 +48,18 @@ class OAuthService extends BaseService {
             ))->execute()->getGraphObject(GraphUser::className());
             $me->getName();
             $fbId = $me->getId();
-            $item = $this->getUsersCollection()->findOne(['fb_id'=> $fbId], ['access_token']);
+            $item = $this->getUsersCollection()->findOne(['fb_id'=> $fbId], ['access_token', 'type']);
 
             if(is_null($item)){
                 $now = new \MongoTimestamp();
-                $birth_date = new \MongoTimestamp($me->getBirthday()->getTimestamp());
+                $birth_date = $me->getBirthday();
+                if($birth_date instanceof \DateTime){
+                    $birth_date = $birth_date->getTimestamp();
+                }
+                else {
+                    $birth_date = 0;
+                }
+                $birth_date = new \MongoTimestamp($birth_date);
                 $item = [
                     '_id'=> new \MongoId(),
                     'fb_id'=> $fbId,
@@ -66,6 +73,7 @@ class OAuthService extends BaseService {
                     'mobile'=> '',
                     'created_at'=> $now,
                     'updated_at'=> $now,
+                    'type'=> 'normal',
                     'setting'=> UserHelper::defaultSetting(),
                     'display_notification_number' => 0
                 ];
@@ -111,7 +119,7 @@ class OAuthService extends BaseService {
                 $this->getUsersCollection()->update(['_id'=> $item['_id']], ['$addToSet'=> ['android_token'=> $params['android_token'] ]]);
             }
 
-            return ['user_id'=> MongoHelper::standardId($item['_id']), 'access_token'=> $item['access_token']];
+            return ['user_id'=> MongoHelper::standardId($item['_id']), 'access_token'=> $item['access_token'], 'type'=> $item['type']];
 
         } catch (FacebookRequestException $e) {
             throw new ServiceException(ResponseHelper::error($e->getMessage()));
@@ -150,7 +158,7 @@ class OAuthService extends BaseService {
             $this->getUsersCollection()->update(['_id'=> $item['_id']], ['$addToSet'=> ['android_token'=> $params['android_token'] ]]);
         }
 
-        return ['user_id'=> MongoHelper::standardId($item['_id']), 'access_token'=> $item['access_token']];
+        return ['user_id'=> MongoHelper::standardId($item['_id']), 'access_token'=> $item['access_token'], 'type'=> $item['type']];
     }
 
     public function generateToken($id){

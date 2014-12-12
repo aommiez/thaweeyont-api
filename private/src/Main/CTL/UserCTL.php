@@ -77,4 +77,48 @@ class UserCTL extends BaseCTL {
             return $ex->getResponse();
         }
     }
+
+    /**
+     * @POST
+     * @uri /request_reset_code
+     */
+    public function requestResetCode(){
+        try {
+            return UserService::getInstance()->requestResetCode($this->reqInfo->params(), $this->getCtx());
+        }
+        catch(ServiceException $ex){
+            return $ex->getResponse();
+        }
+    }
+
+    /**
+     * @GET
+     * @uri /get_user_by_code
+     */
+    public function getUserByCode(){
+        try {
+            $item = UserService::getInstance()->getUserByCode($this->reqInfo->params(), $this->getCtx());
+            MongoHelper::standardIdEntity($item);
+
+            return $item;
+        }
+        catch(ServiceException $ex){
+            return $ex->getResponse();
+        }
+    }
+
+    /**
+     * @POST
+     * @uri /set_password_by_code
+     */
+    public function setPasswordByCode(){
+        try {
+            $item = UserService::getInstance()->setPasswordByCode($this->reqInfo->params(), $this->getCtx());
+
+            return ['success'=> $item];
+        }
+        catch(ServiceException $ex){
+            return $ex->getResponse();
+        }
+    }
 }

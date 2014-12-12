@@ -151,4 +151,18 @@ class PromotionCTL extends BaseCTL {
             return $ex->getResponse();
         }
     }
+
+    /**
+     * @POST
+     * @uri /sort
+     */
+    public function sort(){
+        try {
+            $res = PromotionService::getInstance()->sort($this->reqInfo->params(), $this->getCtx());
+            return $res;
+        }
+        catch (ServiceException $e){
+            return $e->getResponse();
+        }
+    }
 }

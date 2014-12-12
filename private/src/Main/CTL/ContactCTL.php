@@ -340,4 +340,22 @@ class ContactCTL extends BaseCTL {
             return $ex->getResponse();
         }
     }
+
+    /**
+     * @POST
+     * @uri /branches/sort
+     */
+    public function branchesSort(){
+        $res = ContactService::getInstance()->branchesSort($this->reqInfo->params(), $this->getCtx());
+        return $res;
+    }
+
+    /**
+     * @POST
+     * @uri /branches/tel/sort
+     */
+    public function telBranchesSort(){
+        $res = ContactService::getInstance()->telBranchesSort($this->reqInfo->params(), $this->getCtx());
+        return $res;
+    }
 }

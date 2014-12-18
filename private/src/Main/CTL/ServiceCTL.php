@@ -232,6 +232,8 @@ class ServiceCTL extends BaseCTL {
     public function get(){
         try {
             $item = ServiceService::getInstance()->get($this->reqInfo->urlParam('id'), $this->getCtx());
+            ServiceService::getInstance()->incView($this->reqInfo->urlParam('id'), $this->getCtx());
+
             if($item['type']=='folder'){
                 $item['thumb'] = Image::load($item['thumb'])->toArrayResponse();
                 $item['node'] = NodeHelper::serviceFolder($item['_id']);

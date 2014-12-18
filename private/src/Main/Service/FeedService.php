@@ -185,4 +185,8 @@ class FeedService extends BaseService {
             "share"=> URL::share('')
         );
     }
+
+    public function incView($id){
+        $this->getCollection()->update(['_id'=> MongoHelper::mongoId($id)], ['$inc'=> ['view_count'=> 1]]);
+    }
 }

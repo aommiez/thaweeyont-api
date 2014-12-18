@@ -76,6 +76,7 @@ class PromotionCTL extends BaseCTL {
     public function get(){
         try {
             $item = PromotionService::getInstance()->get($this->reqInfo->urlParam('id'), $this->getCtx());
+            PromotionService::getInstance()->incView($this->reqInfo->urlParam('id'), $this->getCtx());
 
             MongoHelper::standardIdEntity($item);
             $item['created_at'] = MongoHelper::timeToInt($item['created_at']);

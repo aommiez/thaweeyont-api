@@ -168,4 +168,9 @@ class PromotionService extends BaseService {
 
         return array('success'=> true);
     }
+
+    public function incView($id){
+        $this->getCollection()->update(['_id'=> MongoHelper::mongoId($id)], ['$inc'=> ['view_count'=> 1]]);
+    }
+
 }

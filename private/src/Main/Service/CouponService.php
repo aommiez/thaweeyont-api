@@ -118,7 +118,7 @@ class CouponService extends BaseService {
             ->find($condition)
             ->limit((int)$options['limit'])
             ->skip((int)$skip)
-            ->sort(['created_at'=> -1]);
+            ->sort(['seq'=> -1]);
 
         $data = [];
 
@@ -248,4 +248,9 @@ class CouponService extends BaseService {
 
         return array('success'=> true);
     }
+
+    public function incView($id){
+        $this->getCollection()->update(['_id'=> MongoHelper::mongoId($id)], ['$inc'=> ['view_count'=> 1]]);
+    }
+
 }

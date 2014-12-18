@@ -51,6 +51,20 @@ class MessageService extends BaseService {
         else if($params['to'] == "register"){
             $condition = ["fb_id"=> ""];
         }
+        else if($params['to'] == "users"){
+            $v = new Validator($params);
+            $v->rule('required', ['users_id']);
+
+            if(!$v->validate()){
+                throw new ServiceException(ResponseHelper::validateError($v->errors()));
+            }
+
+            $users_id = [];
+            foreach($params['users_id'] as $key=> $value){
+                $users_id[] = MongoHelper::mongoId($value);
+            }
+            $condition = ["_id"=> ['$in'=> $users_id]];
+        }
 
         $users = $this->getUserCollection()->find($condition);
         foreach($users as $user){

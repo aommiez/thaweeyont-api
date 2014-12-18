@@ -72,6 +72,9 @@ class ServiceService extends BaseService {
         // insert type
         $insert['type'] = 'item';
 
+        // insert view_count
+        $insert['view_count'] = 0;
+
 //        $insert['app_id'] = $ctx->getAppId();
         MongoHelper::setCreatedAt($insert);
         MongoHelper::setUpdatedAt($insert);
@@ -115,6 +118,9 @@ class ServiceService extends BaseService {
 
         // update
         $this->getCollection()->update(['_id'=> $id], ['$set'=> $set]);
+        if(isset($set['parent_id'])){
+            $this->updateChildren($set['parent_id']);
+        }
 
         // feed update timestamp (last_update)
         UpdatedTimeHelper::update('service', time());
@@ -200,6 +206,9 @@ class ServiceService extends BaseService {
 
         // feed update timestamp (last_update)
         UpdatedTimeHelper::update('service', time());
+        if(isset($set['parent_id'])){
+            $this->updateChildren($set['parent_id']);
+        }
 
         return $this->get($id, $ctx);
     }
@@ -390,10 +399,14 @@ class ServiceService extends BaseService {
     public function delete($id, Context $ctx){
         $id = MongoHelper::mongoId($id);
 
+        $item = $this->get($id, $ctx);
         $this->getCollection()->remove(array("_id"=> $id));
 
         // feed update timestamp (last_update)
         UpdatedTimeHelper::update('service', time());
+        if(isset($item['parent_id'])){
+            $this->updateChildren($item['parent_id']);
+        }
 
         return array("success"=> true);
     }
@@ -411,5 +424,9 @@ class ServiceService extends BaseService {
             $this->getCollection()->update(array('_id'=> $mongoId), array('$set'=> array('seq'=> $seq)));
         }
         return array('success'=> true);
+    }
+
+    public function incView($id){
+        $this->getCollection()->update(['_id'=> MongoHelper::mongoId($id)], ['$inc'=> ['view_count'=> 1]]);
     }
 }

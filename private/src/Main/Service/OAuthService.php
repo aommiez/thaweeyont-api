@@ -75,7 +75,10 @@ class OAuthService extends BaseService {
                     'updated_at'=> $now,
                     'type'=> 'normal',
                     'setting'=> UserHelper::defaultSetting(),
-                    'display_notification_number' => 0
+                    'display_notification_number' => 0,
+
+                    // set default last login
+                    'last_login' => new \MongoTimestamp()
                 ];
                 $item['access_token'] = $this->generateToken(MongoHelper::standardId($item['_id']));
 //                $item['app_id'] = $ctx->getAppId();
@@ -157,6 +160,9 @@ class OAuthService extends BaseService {
         if(isset($params['android_token'])){
             $this->getUsersCollection()->update(['_id'=> $item['_id']], ['$addToSet'=> ['android_token'=> $params['android_token'] ]]);
         }
+
+        // set last login
+        $this->getUsersCollection()->update(['_id'=> $item['_id']], ['$set'=> ['last_login'=> new \MongoTimestamp()]]);
 
         return ['user_id'=> MongoHelper::standardId($item['_id']), 'access_token'=> $item['access_token'], 'type'=> $item['type']];
     }

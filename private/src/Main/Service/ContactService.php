@@ -141,6 +141,8 @@ class ContactService extends BaseService {
         ]);
         $insert['seq'] = (int)@$agg['result'][0]['max'] + 1;
 
+        $insert['tel_length'] = 0;
+
         MongoHelper::setCreatedAt($arr);
         MongoHelper::setUpdatedAt($arr);
 
@@ -198,6 +200,10 @@ class ContactService extends BaseService {
         MongoHelper::setUpdatedAt($insert);
 
         $this->getTelBranchesCollection()->insert($insert);
+
+        // fetch count
+        $telLength = $this->getTelBranchesCollection()->count(['branch_id'=> $insert['branch_id']]);
+        $this->getBranchesCollection()->update(['_id'=> $insert['branch_id']], ['$set'=> $telLength]);
 
         // feed update timestamp (last_update)
         UpdatedTimeHelper::update('/contact/branch/'.$branchId.'/tel', time());
@@ -280,6 +286,10 @@ class ContactService extends BaseService {
         $item = $this->getTel($id, $ctx);
         $condition = ['_id'=> MongoHelper::mongoId($id)];
         $this->getTelBranchesCollection()->remove($condition);
+
+        // fetch count
+        $telLength = $this->getTelBranchesCollection()->count(['branch_id'=> MongoHelper::mongoId($id)]);
+        $this->getBranchesCollection()->update(['_id'=> MongoHelper::mongoId($id)], ['$set'=> $telLength]);
 
         // feed update timestamp (last_update)
         UpdatedTimeHelper::update('/contact/branch/'.MongoHelper::standardId($item['branch_id']).'/tel', time());

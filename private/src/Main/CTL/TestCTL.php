@@ -7,7 +7,10 @@
  */
 
 namespace Main\CTL;
+use Main\DB;
 use Main\Helper\APNHelper;
+use Main\Helper\ArrayHelper;
+use Main\Helper\MongoHelper;
 
 /**
  * @Restful
@@ -16,26 +19,23 @@ use Main\Helper\APNHelper;
 class TestCTL extends BaseCTL {
     /**
      * @GET
-     * @uri /push
+     * @uri /a
      */
 
-    public function push(){
-        $apnHelper = new APNHelper(file_get_contents("private/apple/dev.pem"), 'gateway.sandbox.push.apple.com', 2195);
-
-        $res = array();
-        $tokens = array(
-            "0294875d882cbdc65e8a5e2062897e565a9c5c6fc9db9cd40d1bb5ec318ffd06",
-//            "yyqCreAwHvgEJzrhDjycaoEJidzveqgciFucClqBBnuIfGdfsBbBnojmdklhcux",
-//            "26fea0c78d7eb91817bfdafe91c59f2144a31ee7ce5e4c53eb62a9675db3c05d"
-        );
-
-        foreach($tokens as $key=> $token){
-            $res[] = $apnHelper->send($token, "test", array(
-                "test"=> "test"
-            ));
-//            echo pack('H*', $token);
+    public function a(){
+        $coll = DB::getDB()->branches;
+        $items = $coll->find();
+        $res = [];
+        foreach($items as $key=> $item){
+            $set = [
+                'location'=> [
+                    'lat'=> sprintf("%.6f", (float)$item['location']['lat']),
+                    'lng'=> sprintf("%.6f", (float)$item['location']['lng'])
+                ]
+            ];
+            $coll->update(['_id'=> $item['_id']], ['$set'=> ArrayHelper::ArrayGetPath($set)]);
+            $res[] = ArrayHelper::ArrayGetPath($set);
         }
-
         return $res;
     }
 }

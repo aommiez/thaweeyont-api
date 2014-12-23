@@ -47,7 +47,7 @@ class ContactService extends BaseService {
     public function getBranches($options, Context $ctx){
         $default = array(
             "page"=> 1,
-            "limit"=> 15
+            "limit"=> 200
         );
         $options = array_merge($default, $options);
 
@@ -133,6 +133,9 @@ class ContactService extends BaseService {
 
         $arr['pictures'] = $arrPic;
 
+        $arr['location']['lat'] = sprintf("%.6f", (float)$arr['location']['lat']);
+        $arr['location']['lng'] = sprintf("%.6f", (float)$arr['location']['lng']);
+
         $agg = $this->getBranchesCollection()->aggregate([
             ['$group'=> ['_id'=> null, 'max'=> ['$max'=> '$seq']]]
         ]);
@@ -149,7 +152,13 @@ class ContactService extends BaseService {
         $allowed = ['branchName', 'branchTel', 'branchEmail', 'branchFax', 'branchAddress','location' ];
         $set = ArrayHelper::filterKey($allowed, $params);
         if(isset($set['location'])){
-            $set['location'] = ArrayHelper::filterKey(['lat', 'lng'], $set['location']);;
+            $set['location'] = ArrayHelper::filterKey(['lat', 'lng'], $set['location']);
+            if(isset($set['location']['lat'])){
+                $set['location']['lat'] = sprintf("%.6f", (float)$set['location']['lat']);
+            }
+            if(isset($set['location']['lng'])){
+                $set['location']['lng'] = sprintf("%.6f", (float)$set['location']['lng']);
+            }
         }
         $entity = $this->getBranch($id, $ctx);
         if(count($set)==0){
@@ -199,7 +208,7 @@ class ContactService extends BaseService {
     public function getTels($branchId, $params, Context $ctx){
         $default = array(
             "page"=> 1,
-            "limit"=> 15,
+            "limit"=> 200
         );
         $options = array_merge($default, $params);
         $skip = ($options['page']-1)*$options['limit'];
